@@ -1,0 +1,151 @@
+.sidebar {
+  --sidebar-width: 240px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background: var(--background);
+  border-right: 1px solid var(--input-border);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  z-index: 40;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 32px;
+  padding: 0 8px 10px 0;
+  color: var(--text);
+  border-bottom: 1px solid var(--input-border);
+}
+
+.brand a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.nav {
+  flex: 1;
+}
+
+.navList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+}
+
+.navLink {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 0.625rem;
+  color: var(--muted-text);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.navLink:hover {
+  color: var(--text);
+  border-color: var(--input-border);
+}
+
+.navLink[data-active="true"] {
+  color: var(--accent);
+  border-color: var(--input-border);
+  font-weight: 600;
+}
+
+.navLink:focus-visible {
+  outline: 3px solid rgb(103 232 249 / 40%);
+  outline-offset: 2px;
+}
+
+.toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+  width: 40px;
+  height: 40px;
+  border-radius: 0.625rem;
+  border: 1px solid var(--input-border);
+  background: var(--background);
+  cursor: pointer;
+}
+
+.toggleIcon,
+.toggleIcon::before,
+.toggleIcon::after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  margin: 0 auto;
+}
+
+.toggleIcon::before {
+  transform: translateY(-5px);
+}
+
+.toggleIcon::after {
+  transform: translateY(3px);
+}
+
+.overlay {
+  display: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+@media (max-width: 768px) {
+  .toggle {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: 4px 0 16px rgb(0 0 0 / 30%);
+    padding-top: 90px;
+  }
+
+  .sidebar[data-open="true"] {
+    transform: translateX(0);
+  }
+
+  /* .brand {
+    position: relative;
+    top: 10%;
+  } */
+
+  .overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 40%);
+    z-index: 30;
+  }
+}
