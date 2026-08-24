@@ -10,7 +10,13 @@ type NavItem = {
   label: string;
 };
 
-const NAV_ITEMS: NavItem[] = [{ href: "/build", label: "UID検索" }];
+const NAV_ITEMS: NavItem[] = [
+  { href: "/use", label: "使い方" },
+  { href: "/fap", label: "よくある質問" },
+  { href: "/terms", label: "利用規約" },
+  { href: "/privacy", label: "プライバシーポリシー" },
+  { href: "/contact", label: "お問い合わせ" },
+];
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +25,7 @@ export default function Sidebar() {
   return (
     <>
       <button type="button" className={styles.toggle} aria-expanded={isOpen} aria-controls="build-sidebar" onClick={() => setIsOpen((prev) => !prev)}>
-        <span className={styles.toggleIcon} aria-hidden="true" />
+        <span className={`${styles.toggleIcon} ${isOpen ? styles.open : ""}`} aria-hidden="true" />
         <span className={styles.srOnly}>メニューを{isOpen ? "閉じる" : "開く"}</span>
       </button>
 

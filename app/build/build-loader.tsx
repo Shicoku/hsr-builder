@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import styles from "../styles/build.module.css";
-import Sidebar from "../components/Sidebar";
 
 type Status = "loading" | "success" | "error";
 type ApiResponse = { error?: string };
@@ -39,8 +38,6 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
   return (
     <main className={styles.main}>
-      <Sidebar />
-
       <section className={styles.content}>
         <h1 className={styles.title}>ビルド情報</h1>
         <p className={styles.uid}>UID: {uid || "未指定"}</p>

@@ -95,6 +95,9 @@
   height: 2px;
   background: var(--text);
   margin: 0 auto;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .toggleIcon::before {
@@ -103,6 +106,17 @@
 
 .toggleIcon::after {
   transform: translateY(3px);
+}
+
+.toggleIcon.open {
+  background: transparent;
+}
+.toggleIcon.open::before {
+  transform: translateY(-1px) rotate(45deg);
+}
+
+.toggleIcon.open::after {
+  transform: translateY(-2px) rotate(-45deg);
 }
 
 .overlay {
