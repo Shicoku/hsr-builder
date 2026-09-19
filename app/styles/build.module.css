@@ -6,6 +6,7 @@
   padding: 4rem 1.5rem;
   color: var(--text);
   background: var(--background);
+  flex-direction: column;
 }
 .content {
   width: 100%;
@@ -46,9 +47,7 @@
   display: inline-block;
   margin-top: 2rem;
   padding: 0.75rem 1rem;
-  color: var(--muted-text);
   font-size: 0.875rem;
-  text-decoration: none;
   border: 1px solid var(--input-border);
   border-radius: 0.625rem;
 }
@@ -59,4 +58,62 @@
 .backLink:focus-visible {
   outline: 3px solid rgb(103 232 249 / 40%);
   outline-offset: 2px;
+}
+.backLink {
+  color: var(--muted-text);
+  text-decoration: none;
+}
+
+.profileMain {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 2rem 1.5rem;
+}
+
+.profileSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+
+  border: 2px solid var(--input-border);
+  border-radius: 0.625rem;
+  padding: 1rem;
+  padding-right: 3rem;
+}
+.profileSection p {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.characterSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.characterButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 128px;
+  height: 128px;
+  border: 2px solid var(--input-border);
+  border-radius: 0.625rem;
+}
+
+@media (min-width: 769px) {
+  .profileMain {
+    padding-left: calc(240px + 2rem);
+  }
+}
+
+.profileDetails {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.profileDetails p {
+  margin: 0;
 }

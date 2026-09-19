@@ -29,9 +29,9 @@ export default function Sidebar() {
         <span className={styles.srOnly}>メニューを{isOpen ? "閉じる" : "開く"}</span>
       </button>
 
-      {isOpen && <div className={styles.overlay} onClick={() => setIsOpen(false)} aria-hidden="true" />}
+      <div className={`${styles.overlay} ${isOpen ? styles.show : styles.hide}`} onClick={() => setIsOpen(false)} aria-hidden="true" />
 
-      <aside id="build-sidebar" className={styles.sidebar} data-open={isOpen}>
+      <aside id="build-sidebar" className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
         <div className={styles.brand}>
           <Link href="/" onClick={() => setIsOpen(false)}>
             ビルドカード

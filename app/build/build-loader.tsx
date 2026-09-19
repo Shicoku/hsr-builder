@@ -1,53 +1,127 @@
 "use client";
 
-import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "../styles/build.module.css";
 
-type Status = "loading" | "success" | "error";
-type ApiResponse = { error?: string };
+import { Parser } from "../../lib/parser";
+
+type Player = {
+  uid?: string;
+  nickname?: string;
+  avatar?: { icon?: string };
+};
+
+type Character = {
+  id: string;
+  name?: string;
+  icon?: string;
+};
+
+type ApiResponse = {
+  data?: { player?: Player; characters?: Character[] };
+  error?: string;
+  retryAfterSeconds?: number;
+};
+
+function assetUrl(icon: string | undefined) {
+  if (!icon) return undefined;
+  if (icon.startsWith("http://") || icon.startsWith("https://")) return icon;
+  return `https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/${icon}`;
+}
 
 export default function BuildLoader({ uid }: { uid: string }) {
-  const [status, setStatus] = useState<Status>("loading");
-  const [message, setMessage] = useState("情報を取得しています…");
+  const [player, setPlayer] = useState<Player | null>(null);
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [error, setError] = useState("");
+  const [requestVersion, setRequestVersion] = useState(0);
+  const [selectedInfo, setSelectedInfo] = useState<ReturnType<typeof Parser> | null>(null);
+
   const isValidUid = /^\d{9}$/.test(uid);
+
+  const handleCharacterClick = (characterId: number) => {
+    const result = Parser(characterId, characters);
+    setSelectedInfo(result);
+  };
 
   useEffect(() => {
     if (!isValidUid) return;
 
     const controller = new AbortController();
+    let retryTimer: number | undefined;
+
     async function loadProfile() {
       try {
-        const response = await fetch(`/api/profile/${uid}`, { cache: "no-store", signal: controller.signal });
+        const response = await fetch(`/api/profile/${uid}`, {
+          cache: "no-store",
+          signal: controller.signal,
+        });
         const result = (await response.json()) as ApiResponse;
+
+        if (response.status === 429) {
+          const retryAfterSeconds = result.retryAfterSeconds ?? 1;
+          retryTimer = window.setTimeout(() => {
+            setRequestVersion((version) => version + 1);
+          }, retryAfterSeconds * 1_000);
+          return;
+        }
         if (!response.ok) throw new Error(result.error ?? "情報を取得できませんでした。");
-        setStatus("success");
-        setMessage("情報を取得しました。ビルドカードを作成します。");
-      } catch (error) {
+        if (!result.data?.player) throw new Error("プレイヤー情報を取得できませんでした。");
+
+        setPlayer(result.data.player);
+        setCharacters(result.data.characters?.slice(0, 7) ?? []);
+      } catch (fetchError) {
         if (controller.signal.aborted) return;
-        setStatus("error");
-        setMessage(error instanceof Error ? error.message : "情報を取得できませんでした。");
+        setError(fetchError instanceof Error ? fetchError.message : "情報を取得できませんでした。");
       }
     }
-    void loadProfile();
-    return () => controller.abort();
-  }, [isValidUid, uid]);
 
-  const displayStatus = isValidUid ? status : "error";
-  const displayMessage = isValidUid ? message : "UIDを入力してください。";
+    void loadProfile();
+    return () => {
+      controller.abort();
+      if (retryTimer) window.clearTimeout(retryTimer);
+    };
+  }, [isValidUid, requestVersion, uid]);
+
+  if (!isValidUid) return <main>URLに有効なUIDが指定されていません。</main>;
+  if (error) return <main>{error}</main>;
+
+  if (!player) {
+    return (
+      <main className={styles.main}>
+        <p>ロード中</p>
+      </main>
+    );
+  }
+
+  const avatarIcon = assetUrl(player.avatar?.icon);
 
   return (
-    <main className={styles.main}>
-      <section className={styles.content}>
-        <h1 className={styles.title}>ビルド情報</h1>
-        <p className={styles.uid}>UID: {uid || "未指定"}</p>
-        <p className={styles.status} data-status={displayStatus} aria-live="polite">
-          {displayMessage}
-        </p>
-        <Link className={styles.backLink} href="/">
-          別のUIDを入力する
-        </Link>
+    <main className={`${styles.main} ${styles.profileMain}`}>
+      <section className={styles.profileSection}>
+        {avatarIcon && <Image src={avatarIcon} alt="Avatar" width={96} height={96} loading="eager" unoptimized />}
+        <div className={styles.profileDetails}>
+          <p>{player.nickname}</p>
+          <p>{player.uid}</p>
+        </div>
       </section>
+
+      <section className={styles.characterSection}>
+        {characters.map((character, index) => {
+          const characterIcon = assetUrl(character.icon);
+          return (
+            <button type="button" key={character.id} aria-label={character.name ?? character.id} className={styles.characterButton} onClick={() => handleCharacterClick(index)}>
+              {characterIcon && <Image src={characterIcon} alt="Character" width={128} height={128} loading="eager" unoptimized />}
+            </button>
+          );
+        })}
+      </section>
+
+      {selectedInfo && (
+        <section>
+          <p>Selected Character Info: {selectedInfo.name}</p>
+        </section>
+      )}
     </main>
   );
 }
