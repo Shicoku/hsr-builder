@@ -103,6 +103,24 @@
   border-radius: 0.625rem;
 }
 
+.selected {
+  position: relative;
+  top: -5;
+  border: 2px solid var(--accent);
+}
+
+.relicSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.canvasItem {
+  border: 2px solid var(--input-border);
+  border-radius: 0.625rem;
+  padding: 1rem;
+}
+
 @media (min-width: 769px) {
   .profileMain {
     padding-left: calc(240px + 2rem);

@@ -6,6 +6,9 @@ import styles from "../styles/build.module.css";
 
 // import { Score } from "../../lib/parser";
 import { Score } from "../../lib/scorer";
+import { RenderRelic } from "../../lib/renderRelic";
+
+import RelicCanvasItem from "./relicCanvasItem";
 
 type Player = {
   uid?: string;
@@ -36,12 +39,16 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [error, setError] = useState("");
   const [requestVersion, setRequestVersion] = useState(0);
-  const [selectedInfo, setSelectedInfo] = useState<ReturnType<typeof Score> | null>(null);
+  const [selectedCharacterIndex, setSelectedCharacterIndex] = useState<number | null>(null);
+  const [selectedInfo, setSelectedInfo] = useState<ReturnType<typeof RenderRelic> | null>(null);
 
   const isValidUid = /^\d{9}$/.test(uid);
 
   const handleCharacterClick = (characterId: number) => {
-    const result = Score(characterId, characters);
+    setSelectedCharacterIndex((prev) => (prev === characterId ? null : characterId));
+    const score = Score(characterId, characters);
+    const result = RenderRelic(characterId, characters, score);
+    console.log("Selected Character Info:", result);
     setSelectedInfo(result);
   };
 
@@ -111,7 +118,13 @@ export default function BuildLoader({ uid }: { uid: string }) {
         {characters.map((character, index) => {
           const characterIcon = assetUrl(character.icon);
           return (
-            <button type="button" key={character.id} aria-label={character.name ?? character.id} className={styles.characterButton} onClick={() => handleCharacterClick(index)}>
+            <button
+              type="button"
+              key={character.id}
+              aria-label={character.name ?? character.id}
+              className={`${styles.characterButton} ${selectedCharacterIndex == index ? styles.selected : ""}`}
+              onClick={() => handleCharacterClick(index)}
+            >
               {characterIcon && <Image src={characterIcon} alt="Character" width={128} height={128} loading="eager" unoptimized />}
             </button>
           );
@@ -119,9 +132,9 @@ export default function BuildLoader({ uid }: { uid: string }) {
       </section>
 
       {selectedInfo && (
-        <section>
-          {selectedInfo.map((score, index) => (
-            <p key={index}>Selected Character Info: {score.finalScore}</p>
+        <section className={styles.relicSection}>
+          {selectedInfo.map((relic, index) => (
+            <RelicCanvasItem key={index} relic={relic} />
           ))}
         </section>
       )}
