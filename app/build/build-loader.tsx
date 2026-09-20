@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "../styles/build.module.css";
 
-import { Parser } from "../../lib/parser";
+// import { Score } from "../../lib/parser";
+import { Score } from "../../lib/scorer";
 
 type Player = {
   uid?: string;
@@ -35,12 +36,12 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [error, setError] = useState("");
   const [requestVersion, setRequestVersion] = useState(0);
-  const [selectedInfo, setSelectedInfo] = useState<ReturnType<typeof Parser> | null>(null);
+  const [selectedInfo, setSelectedInfo] = useState<ReturnType<typeof Score> | null>(null);
 
   const isValidUid = /^\d{9}$/.test(uid);
 
   const handleCharacterClick = (characterId: number) => {
-    const result = Parser(characterId, characters);
+    const result = Score(characterId, characters);
     setSelectedInfo(result);
   };
 
@@ -119,7 +120,9 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
       {selectedInfo && (
         <section>
-          <p>Selected Character Info: {selectedInfo.name}</p>
+          {selectedInfo.map((score, index) => (
+            <p key={index}>Selected Character Info: {score.finalScore}</p>
+          ))}
         </section>
       )}
     </main>
