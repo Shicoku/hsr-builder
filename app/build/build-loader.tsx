@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import styles from "../styles/build.module.css";
 
 // import { Score } from "../../lib/parser";
-import { Score } from "../../lib/scorer";
-import { RenderRelic } from "../../lib/renderRelic";
+import { Score } from "../../lib/utils/scorer";
+import { RenderRelic } from "../../lib/utils/renderRelic";
+import { parserChar } from "../../lib/utils/renderBuild";
 
 import RelicCanvasItem from "./relicCanvasItem";
+import BuildCanvasItem from "./buildCanvasItem";
 
 type Player = {
   uid?: string;
@@ -41,16 +43,29 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const [requestVersion, setRequestVersion] = useState(0);
   const [selectedCharacterIndex, setSelectedCharacterIndex] = useState<number | null>(null);
   const [selectedInfo, setSelectedInfo] = useState<ReturnType<typeof RenderRelic> | null>(null);
+  // const [selectedScore, setSelectedScore] = useState<any>(null);
+  const [buildInfo, setBuildInfo] = useState<ReturnType<typeof parserChar> | null>(null);
 
   const isValidUid = /^\d{9}$/.test(uid);
 
   const handleCharacterClick = (characterId: number) => {
     setSelectedCharacterIndex((prev) => (prev === characterId ? null : characterId));
     const score = Score(characterId, characters);
+    // setSelectedScore(score);
     const result = RenderRelic(characterId, characters, score);
     console.log("Selected Character Info:", result);
     setSelectedInfo(result);
+
+    const build = parserChar(characterId, player, characters, score);
+    setBuildInfo(build);
   };
+
+  // const handleBuildClick = (cid: number) => {
+  //   if (cid === null) return;
+  //   console.log(cid);
+  //   const result = parserChar(cid, player, characters, selectedScore);
+  //   setBuildInfo(result);
+  // };
 
   useEffect(() => {
     if (!isValidUid) return;
@@ -91,8 +106,8 @@ export default function BuildLoader({ uid }: { uid: string }) {
     };
   }, [isValidUid, requestVersion, uid]);
 
-  if (!isValidUid) return <main>URLに有効なUIDが指定されていません。</main>;
-  if (error) return <main>{error}</main>;
+  if (!isValidUid) return <main className={styles.main}>URLに有効なUIDが指定されていません。</main>;
+  if (error) return <main className={styles.main}>{error}</main>;
 
   if (!player) {
     return (
@@ -133,9 +148,25 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
       {selectedInfo && (
         <section className={styles.relicSection}>
-          {selectedInfo.map((relic, index) => (
-            <RelicCanvasItem key={index} relic={relic} />
-          ))}
+          <div className={styles.canvasWrap}>
+            {selectedInfo.map((relic, index) => (
+              <RelicCanvasItem key={index} relic={relic} />
+            ))}
+          </div>
+
+          {/* <button
+            onClick={() => {
+              if (selectedCharacterIndex !== null) handleBuildClick(selectedCharacterIndex);
+            }}
+          >
+            ビルドカード
+          </button> */}
+        </section>
+      )}
+
+      {buildInfo && (
+        <section className={styles.buildSection}>
+          <BuildCanvasItem key={selectedCharacterIndex} build={buildInfo}></BuildCanvasItem>
         </section>
       )}
     </main>

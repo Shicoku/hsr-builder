@@ -102,6 +102,13 @@
   border: 2px solid var(--input-border);
   border-radius: 0.625rem;
 }
+.characterButton:hover {
+  opacity: 0.4;
+}
+.characterButton:active {
+  position: relative;
+  top: 5;
+}
 
 .selected {
   position: relative;
@@ -111,14 +118,53 @@
 
 .relicSection {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 1rem;
   margin-top: 1rem;
+}
+.canvasWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 .canvasItem {
   border: 2px solid var(--input-border);
   border-radius: 0.625rem;
   padding: 1rem;
+}
+
+.relicSection button {
+  display: inline-block;
+  margin: 0 auto;
+  border: 2px solid var(--input-border);
+  border-radius: 0.625rem;
+  padding: 1rem;
+}
+.relicSection button:hover {
+  opacity: 0.4;
+}
+.relicSection button:active {
+  position: relative;
+  top: 5;
+}
+
+.buildSection {
+  margin-top: 1rem;
+}
+
+.buildCanvas {
+  display: none;
+}
+
+.buildImageWrap {
+  width: 80%;
+  margin: 0 auto;
+}
+.buildImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.625rem;
 }
 
 @media (min-width: 769px) {
