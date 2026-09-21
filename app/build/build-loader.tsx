@@ -53,7 +53,6 @@ export default function BuildLoader({ uid }: { uid: string }) {
     const score = Score(characterId, characters);
     // setSelectedScore(score);
     const result = RenderRelic(characterId, characters, score);
-    console.log("Selected Character Info:", result);
     setSelectedInfo(result);
 
     const build = parserChar(characterId, player, characters, score);
