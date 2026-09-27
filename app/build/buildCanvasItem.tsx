@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "../styles/build.module.css";
+import spinner from "../styles/spinner.module.css";
 
 import { starDraw } from "../..//lib/utils/startDraw";
 
@@ -37,7 +38,10 @@ export default function BuildCanvasItem({ build }: { build: any }) {
           <Image src={imageUrl} alt="Build" width={1920} height={1080} className={styles.buildImage} unoptimized />
         </div>
       ) : (
-        <canvas ref={canvasRef} className={styles.buildCanvas}></canvas>
+        <div className={spinner.loadingWrap}>
+          <Image src={"/icons/spinner.svg"} width={100} height={100} alt="icon" className={spinner.spinner} priority />
+          <canvas ref={canvasRef} className={styles.buildCanvas}></canvas>
+        </div>
       )}
     </>
   );

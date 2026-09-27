@@ -1,0 +1,22 @@
+.loadingWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 50vh; /* 画面や親要素に応じて調整 */
+}
+
+.spinner {
+  width: 200px;
+  height: auto;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

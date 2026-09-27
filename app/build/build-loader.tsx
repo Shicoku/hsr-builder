@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "../styles/build.module.css";
+import spinner from "../styles/spinner.module.css";
 
 // import { Score } from "../../lib/parser";
 import { Score } from "../../lib/utils/scorer";
@@ -111,7 +112,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
   if (!player) {
     return (
       <main className={styles.main}>
-        <p>ロード中</p>
+        <Image src={"/icons/spinner.svg"} width={100} height={100} alt="icon" className={spinner.spinner} priority />
       </main>
     );
   }

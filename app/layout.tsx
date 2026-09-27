@@ -4,7 +4,7 @@ import Sidebar from "./components/Sidebar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ビルドカード",
+  title: "崩壊: スターレイル - ビルドカード生成器",
   description: "崩壊：スターレイルのビルドカードを作成します。",
 };
 
