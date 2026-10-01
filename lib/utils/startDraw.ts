@@ -148,19 +148,19 @@ export function starDraw(canvas: any, ctx: any, width: number, height: number, b
         const mainIcon = relicMainImgs[i];
         ctx.drawImage(mainIcon, 1350, 70 + i * 170, mainIcon.width / 2.6, mainIcon.height / 2.6);
 
-        ctx.font = "30px 'kt'";
+        ctx.font = "30px 'Kaisei Tokumin'";
         ctx.fillStyle = "#fff";
         ctx.fillText(relic.main_affix.name, 1400, 105 + i * 170);
 
         ctx.textAlign = "right";
-        ctx.font = "40px 'kt'";
+        ctx.font = "40px 'Kaisei Tokumin'";
         ctx.fillText(relic.main_affix.dis, 1480, 155 + i * 170);
         ctx.textAlign = "start";
 
         const rarityImg = relicRarityImgs[i];
         ctx.drawImage(rarityImg, 1180, 140 + i * 170, rarityImg.width / 2, rarityImg.height / 2);
 
-        ctx.font = "25px 'kt'";
+        ctx.font = "25px 'Kaisei Tokumin'";
         ctx.fillStyle = "#fff";
         ctx.fillText(`Lv. ${relic.level}`, 1430, 185 + i * 170);
         ctx.strokeStyle = "#fff";
@@ -171,7 +171,7 @@ export function starDraw(canvas: any, ctx: any, width: number, height: number, b
 
           ctx.drawImage(img, 1540, 50 + (i * 170 + j * 34), img.width / 2.7, img.height / 2.7);
 
-          ctx.font = "25px 'kt'";
+          ctx.font = "25px 'Kaisei Tokumin'";
           ctx.fillStyle = "#fff";
           ctx.fillText(sub.name, 1590, 80 + (i * 170 + j * 34));
 

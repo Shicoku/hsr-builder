@@ -165,7 +165,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
         <section className={styles.relicSection}>
           <div className={styles.canvasWrap}>
             {selectedInfo.map((relic, index) => (
-              <RelicCanvasItem key={index} relic={relic} />
+              <RelicCanvasItem key={`${selectedCharacterIndex}-${index}`} relic={relic} />
             ))}
           </div>
         </section>

@@ -100,6 +100,7 @@
   justify-content: center;
   width: 128px;
   height: 128px;
+  flex-shrink: 0;
   border: 2px solid var(--input-border);
   border-radius: 0.625rem;
 }
@@ -132,6 +133,8 @@
   border: 2px solid var(--input-border);
   border-radius: 0.625rem;
   padding: 1rem;
+  width: 230px;
+  height: auto;
 }
 
 .relicSection button {
@@ -209,4 +212,46 @@
 
 .profileDetails p {
   margin: 0;
+}
+
+@media (max-width: 640px) {
+  .profileMain {
+    align-items: center;
+  }
+
+  .characterSection {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding: 8px 4px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .characterButton {
+    scroll-snap-align: start;
+    width: 100px;
+    height: 100px;
+  }
+
+  .relicSection {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .canvasWrap {
+    align-items: center;
+    justify-content: center;
+  }
+  .canvasItem {
+    width: 300px;
+    height: auto;
+  }
+
+  .buildImageWrap {
+    width: 100%;
+    margin: 0 auto;
+  }
 }
