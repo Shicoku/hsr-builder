@@ -71,6 +71,7 @@
 }
 
 .profileSection {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -166,6 +167,33 @@
   height: auto;
   display: block;
   border-radius: 0.625rem;
+}
+
+.reload {
+  width: 40px;
+  height: auto;
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  border: solid 2px #fff;
+  border-radius: 50%;
+  font-size: 1.2rem;
+
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  background: transparent;
+}
+
+.reloadWrap {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
 }
 
 @media (min-width: 769px) {

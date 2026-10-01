@@ -1,22 +1,37 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./styles/home.module.css";
 
 const LAST_UID_STORAGE_KEY = "hsr-builder:last-uid";
+const TERMS_NOTICE_STORAGE_KEY = "hsr-builder:terms-notice-seen";
 
 export default function Home() {
   const router = useRouter();
   const [uid, setUid] = useState("");
   const [message, setMessage] = useState("");
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     try {
       const savedUid = window.localStorage.getItem(LAST_UID_STORAGE_KEY);
       if (savedUid) queueMicrotask(() => setUid(savedUid));
     } catch {}
+
+    try {
+      if (!window.localStorage.getItem(TERMS_NOTICE_STORAGE_KEY)) {
+        dialogRef.current?.showModal();
+      }
+    } catch {}
   }, []);
+
+  function closeTermsNotice() {
+    try {
+      window.localStorage.setItem(TERMS_NOTICE_STORAGE_KEY, "1");
+    } catch {}
+    dialogRef.current?.close();
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -74,10 +89,25 @@ export default function Home() {
           {/* <a className={styles.supportLink} href="#how-to-use">使い方</a>
           <a className={styles.supportLink} href="#contact">お問い合わせ</a> */}
           <a className={styles.supportLink} href="/terms">
-            利用規約の確認をお願いします
+            利用規約を確認する
           </a>
         </nav>
       </section>
+
+      <dialog ref={dialogRef} className={styles.dialog} aria-labelledby="terms-dialog-title" onCancel={closeTermsNotice}>
+        <h2 id="terms-dialog-title" className={styles.dialogTitle}>
+          ご利用前にお読みください
+        </h2>
+        <p className={styles.dialogText}>本サービスをご利用頂く前に利用規約を必ずお読みください。</p>
+        <div className={styles.dialogActions}>
+          <a className={styles.dialogLink} href="/terms" target="_blank" rel="noopener noreferrer">
+            利用規約を確認する
+          </a>
+          <button className={styles.dialogButton} onClick={closeTermsNotice}>
+            閉じる
+          </button>
+        </div>
+      </dialog>
     </main>
   );
 }

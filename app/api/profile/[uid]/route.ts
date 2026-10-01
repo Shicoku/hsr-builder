@@ -21,6 +21,6 @@ export async function GET(request: Request, context: RouteContext<"/api/profile/
 
     return Response.json({ data: await response.json() });
   } catch {
-    return Response.json({ error: "情報の取得先に接続できませんでした。しばらくしてからもう一度お試しください。" }, { status: 502 });
+    return Response.json({ error: `情報の取得先に接続できませんでした。しばらくしてからもう一度お試しください。` }, { status: 502 });
   }
 }

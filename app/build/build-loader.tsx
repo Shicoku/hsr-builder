@@ -31,6 +31,8 @@ type ApiResponse = {
   retryAfterSeconds?: number;
 };
 
+const COOLDOWN_SEC = 59;
+
 function assetUrl(icon: string | undefined) {
   if (!icon) return undefined;
   if (icon.startsWith("http://") || icon.startsWith("https://")) return icon;
@@ -46,6 +48,8 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const [selectedInfo, setSelectedInfo] = useState<ReturnType<typeof RenderRelic> | null>(null);
   // const [selectedScore, setSelectedScore] = useState<any>(null);
   const [buildInfo, setBuildInfo] = useState<ReturnType<typeof parserChar> | null>(null);
+  const [remaining, setRemaining] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isValidUid = /^\d{9}$/.test(uid);
 
@@ -60,6 +64,14 @@ export default function BuildLoader({ uid }: { uid: string }) {
     setBuildInfo(build);
   };
 
+  const handleTimerClick = () => {
+    setRemaining(COOLDOWN_SEC);
+    setError("");
+    setRequestVersion((version) => version + 1);
+  };
+
+  const disabled = isLoading || remaining > 0;
+
   // const handleBuildClick = (cid: number) => {
   //   if (cid === null) return;
   //   console.log(cid);
@@ -68,12 +80,19 @@ export default function BuildLoader({ uid }: { uid: string }) {
   // };
 
   useEffect(() => {
+    if (remaining <= 0) return;
+    const id = setTimeout(() => setRemaining((r) => r - 1), 1000);
+    return () => clearTimeout(id);
+  }, [remaining]);
+
+  useEffect(() => {
     if (!isValidUid) return;
 
     const controller = new AbortController();
     let retryTimer: number | undefined;
 
     async function loadProfile() {
+      setIsLoading(true);
       try {
         const response = await fetch(`/api/profile/${uid}`, {
           cache: "no-store",
@@ -96,6 +115,8 @@ export default function BuildLoader({ uid }: { uid: string }) {
       } catch (fetchError) {
         if (controller.signal.aborted) return;
         setError(fetchError instanceof Error ? fetchError.message : "情報を取得できませんでした。");
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     }
 
@@ -122,6 +143,10 @@ export default function BuildLoader({ uid }: { uid: string }) {
   return (
     <main className={`${styles.main} ${styles.profileMain}`}>
       <section className={styles.profileSection}>
+        <button onClick={handleTimerClick} disabled={disabled} className={`${styles.reloadWrap} ${remaining > 0 ? styles.count : styles.reload}`}>
+          {isLoading ? "60" : remaining > 0 ? remaining : <Image src={"/icons/reload.svg"} width={100} height={100} alt="reload" priority />}
+        </button>
+
         {avatarIcon && <Image src={avatarIcon} alt="Avatar" width={96} height={96} loading="eager" unoptimized />}
         <div className={styles.profileDetails}>
           <p>{player.nickname}</p>
