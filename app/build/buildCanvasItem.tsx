@@ -22,7 +22,6 @@ export default function BuildCanvasItem({ build }: { build: any }) {
     canvas.width = width;
     canvas.height = height;
 
-    // const font = new FontFace("Kaisei Tokumin", "url(https://fonts.gstatic.com/s/kaiseitokumin/v14/KaiseiTokumin-Regular.woff2) format('woff2')");
     const font = new FontFace("Kaisei Tokumin", "url(/font/KaiseiTokumin-Regular.ttf)");
     font.load().then(() => {
       document.fonts.add(font);

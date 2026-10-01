@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import styles from "../styles/build.module.css";
 import spinner from "../styles/spinner.module.css";
 
-// import { Score } from "../../lib/parser";
 import { Score } from "../../lib/utils/scorer";
 import { RenderRelic } from "../../lib/utils/renderRelic";
 import { parserChar } from "../../lib/utils/renderBuild";
@@ -46,7 +45,6 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const [requestVersion, setRequestVersion] = useState(0);
   const [selectedCharacterIndex, setSelectedCharacterIndex] = useState<number | null>(null);
   const [selectedInfo, setSelectedInfo] = useState<ReturnType<typeof RenderRelic> | null>(null);
-  // const [selectedScore, setSelectedScore] = useState<any>(null);
   const [buildInfo, setBuildInfo] = useState<ReturnType<typeof parserChar> | null>(null);
   const [remaining, setRemaining] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +54,6 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const handleCharacterClick = (characterId: number) => {
     setSelectedCharacterIndex((prev) => (prev === characterId ? null : characterId));
     const score = Score(characterId, characters);
-    // setSelectedScore(score);
     const result = RenderRelic(characterId, characters, score);
     setSelectedInfo(result);
 
@@ -71,13 +68,6 @@ export default function BuildLoader({ uid }: { uid: string }) {
   };
 
   const disabled = isLoading || remaining > 0;
-
-  // const handleBuildClick = (cid: number) => {
-  //   if (cid === null) return;
-  //   console.log(cid);
-  //   const result = parserChar(cid, player, characters, selectedScore);
-  //   setBuildInfo(result);
-  // };
 
   useEffect(() => {
     if (remaining <= 0) return;
@@ -178,14 +168,6 @@ export default function BuildLoader({ uid }: { uid: string }) {
               <RelicCanvasItem key={index} relic={relic} />
             ))}
           </div>
-
-          {/* <button
-            onClick={() => {
-              if (selectedCharacterIndex !== null) handleBuildClick(selectedCharacterIndex);
-            }}
-          >
-            ビルドカード
-          </button> */}
         </section>
       )}
 
