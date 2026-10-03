@@ -13,6 +13,9 @@
   flex-direction: column;
   padding: 24px 16px;
   z-index: 40;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .brand {
@@ -140,6 +143,11 @@
   height: 1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
+}
+
+.footer {
+  margin-top: auto;
+  padding: 16px;
 }
 
 @media (max-width: 768px) {

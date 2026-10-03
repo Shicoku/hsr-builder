@@ -16,7 +16,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/terms", label: "利用規約" },
   { href: "/privacy", label: "プライバシーポリシー" },
   { href: "/contact", label: "お問い合わせ" },
-  { href: "/version", label: "Ver: 1.0.0-beta.1" },
+  { href: "/version", label: "Ver: 1.0.0" },
 ];
 
 export default function Sidebar() {
@@ -53,6 +53,11 @@ export default function Sidebar() {
             })}
           </ul>
         </nav>
+
+        <div className={styles.footer}>
+          <p>&copy; 2026 Shicoku / 詩哭</p>
+          <p>すべての権利は元の所有者に帰属します。</p>
+        </div>
       </aside>
     </>
   );
