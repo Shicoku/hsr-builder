@@ -84,6 +84,17 @@
   border-radius: 0.25rem;
 }
 
+.article table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.article th,
+.article td {
+  border: 1px solid #666;
+  padding: 8px 12px;
+}
+
 @media (max-width: 768px) {
   .main {
     padding: 6rem 1.25rem 3rem;

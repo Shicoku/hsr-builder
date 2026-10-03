@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Kaisei_Tokumin } from "next/font/google";
 import Sidebar from "./components/Sidebar";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
