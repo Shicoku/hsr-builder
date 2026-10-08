@@ -141,45 +141,67 @@ export function starDraw(canvas: any, ctx: any, width: number, height: number, b
 
       build.relics.forEach((relic: any, i: any) => {
         const relicIcon = relicIconImgs[i];
-        ctx.drawImage(relicIcon, 1240, 55 + i * 170, relicIcon.width, relicIcon.height);
+        ctx.drawImage(relicIcon, 1240, 60 + i * 170, relicIcon.width / 1.3, relicIcon.height / 1.3);
 
-        ctx.fillRect(1530, 50 + i * 170, 5, 150);
+        ctx.fillRect(1490, 50 + i * 170, 5, 150);
 
         const mainIcon = relicMainImgs[i];
-        ctx.drawImage(mainIcon, 1350, 70 + i * 170, mainIcon.width / 2.6, mainIcon.height / 2.6);
+        ctx.drawImage(mainIcon, 1320, 70 + i * 170, mainIcon.width / 2.6, mainIcon.height / 2.6);
 
         ctx.font = "30px 'Kaisei Tokumin'";
         ctx.fillStyle = "#fff";
-        ctx.fillText(relic.main_affix.name, 1400, 105 + i * 170);
+        ctx.fillText(relic.main_affix.name, 1365, 105 + i * 170);
 
         ctx.textAlign = "right";
         ctx.font = "40px 'Kaisei Tokumin'";
-        ctx.fillText(relic.main_affix.dis, 1480, 155 + i * 170);
+        ctx.fillText(relic.main_affix.dis, 1450, 155 + i * 170);
         ctx.textAlign = "start";
 
         const rarityImg = relicRarityImgs[i];
-        ctx.drawImage(rarityImg, 1180, 140 + i * 170, rarityImg.width / 2, rarityImg.height / 2);
+        ctx.drawImage(rarityImg, 1180, 140 + i * 170, rarityImg.width / 2.3, rarityImg.height / 2.3);
 
         ctx.font = "25px 'Kaisei Tokumin'";
         ctx.fillStyle = "#fff";
-        ctx.fillText(`Lv. ${relic.level}`, 1430, 185 + i * 170);
+        ctx.fillText(`Lv. ${relic.level}`, 1390, 185 + i * 170);
         ctx.strokeStyle = "#fff";
-        ctx.strokeText(`Lv. ${relic.level}`, 1430, 185 + i * 170);
+        ctx.strokeText(`Lv. ${relic.level}`, 1390, 185 + i * 170);
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+
+        const tempCtx = tempCanvas.getContext("2d");
+
+        if (!tempCtx) return;
 
         relic.sub_affix.forEach((sub: any, j: any) => {
           const img = relicSubImgs[subIndex++];
 
-          ctx.drawImage(img, 1540, 50 + (i * 170 + j * 34), img.width / 2.7, img.height / 2.7);
+          // console.log(sub.count);
+
+          ctx.drawImage(img, 1500, 50 + (i * 170 + j * 34), img.width / 2.7, img.height / 2.7);
 
           ctx.font = "25px 'Kaisei Tokumin'";
           ctx.fillStyle = "#fff";
-          ctx.fillText(sub.name, 1590, 80 + (i * 170 + j * 34));
+          ctx.fillText(sub.name, 1550, 80 + (i * 170 + j * 34));
 
           ctx.textAlign = "right";
-          ctx.fillText(sub.dis, 1765, 80 + (i * 170 + j * 34));
-          ctx.strokeText(sub.dis, 1765, 80 + (i * 170 + j * 34));
+          if (sub.count - 1 != 0) {
+            tempCtx.beginPath();
+            tempCtx.arc(1760, 70 + (i * 170 + j * 34), 15, 0, Math.PI * 2);
+            tempCtx.fillStyle = "#14e4b4";
+            tempCtx.fill();
+
+            tempCtx.save();
+            tempCtx.globalCompositeOperation = "destination-out";
+            tempCtx.font = "25px 'Kaisei Tokumin'";
+            tempCtx.fillText(String(sub.count - 1), 1753, 80 + (i * 170 + j * 34));
+            tempCtx.restore();
+          }
+          ctx.fillStyle = "#fff";
+          ctx.fillText(sub.dis, 1740, 80 + (i * 170 + j * 34));
           ctx.textAlign = "start";
         });
+        ctx.drawImage(tempCanvas, 0, 0);
       });
 
       const relicSetIcons = build.relic_sets.map((r: any) => r.icon);

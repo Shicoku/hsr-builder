@@ -84,8 +84,20 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
             ctx.fillText(sub.name, 35, y);
 
             ctx.textAlign = "right";
-            ctx.fillText(sub.display, 180, y);
-
+            console.log(sub);
+            if (sub.count - 1 != 0) {
+              ctx.beginPath();
+              ctx.arc(185, 123 + i * 25, 10, 0, Math.PI * 2);
+              ctx.fillStyle = "#14e4b4";
+              ctx.fill();
+              ctx.save();
+              ctx.globalCompositeOperation = "destination-out";
+              ctx.font = "18px 'Kaisei Tokumin'";
+              ctx.fillText(String(sub.count - 1), 190, y);
+              ctx.restore();
+            }
+            ctx.fillStyle = "#fff";
+            ctx.fillText(sub.display, 170, y);
             ctx.textAlign = "start";
           });
         })

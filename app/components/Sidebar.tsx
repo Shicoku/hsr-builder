@@ -16,7 +16,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/terms", label: "利用規約" },
   { href: "/privacy", label: "プライバシーポリシー" },
   { href: "/contact", label: "お問い合わせ" },
-  { href: "/version", label: "Ver: 1.0.1" },
+  { href: "/version", label: "Ver: 1.1.0" },
 ];
 
 export default function Sidebar() {

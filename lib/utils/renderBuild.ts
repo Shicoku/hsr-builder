@@ -52,6 +52,8 @@ export function parserChar(cid: number, player: any, character: any, score: any)
         icon: "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/" + s.icon,
         val: s.value,
         dis: s.display,
+        count: s.count,
+        step: s.step,
       })),
     })) ?? [];
 

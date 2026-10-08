@@ -20,6 +20,7 @@ export function RenderRelic(cid: number, data: any, score: any) {
         name: cleanAffixName(sub.name),
         icon: "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/" + sub.icon,
         display: sub.display,
+        count: sub.count,
       })),
     };
     array.push(arrayData);
