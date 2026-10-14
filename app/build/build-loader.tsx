@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "../styles/build.module.css";
 import spinner from "../styles/spinner.module.css";
 
@@ -11,18 +12,7 @@ import { parserChar } from "../../lib/utils/renderBuild";
 
 import RelicCanvasItem from "./relicCanvasItem";
 import BuildCanvasItem from "./buildCanvasItem";
-
-type Player = {
-  uid?: string;
-  nickname?: string;
-  avatar?: { icon?: string };
-};
-
-type Character = {
-  id: string;
-  name?: string;
-  icon?: string;
-};
+import { useBuildStore, type Character, type Player } from "./buildContext";
 
 type ApiResponse = {
   data?: { player?: Player; characters?: Character[] };
@@ -31,6 +21,7 @@ type ApiResponse = {
 };
 
 const COOLDOWN_SEC = 59;
+const EMPTY: Character[] = [];
 
 function assetUrl(icon: string | undefined) {
   if (!icon) return undefined;
@@ -39,26 +30,37 @@ function assetUrl(icon: string | undefined) {
 }
 
 export default function BuildLoader({ uid }: { uid: string }) {
-  const [player, setPlayer] = useState<Player | null>(null);
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const store = useBuildStore();
+  const { setLoaded } = store;
+
   const [error, setError] = useState("");
   const [requestVersion, setRequestVersion] = useState(0);
-  const [selectedCharacterIndex, setSelectedCharacterIndex] = useState<number | null>(null);
-  const [selectedInfo, setSelectedInfo] = useState<ReturnType<typeof RenderRelic> | null>(null);
-  const [buildInfo, setBuildInfo] = useState<ReturnType<typeof parserChar> | null>(null);
   const [remaining, setRemaining] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
+  const isCached = store.uid === uid;
+  const player = isCached ? store.player : null;
+  const characters = isCached ? store.characters : EMPTY;
+  const selectedCharacterIndex = isCached ? store.selectedCharacterIndex : null;
+
   const isValidUid = /^\d{9}$/.test(uid);
 
-  const handleCharacterClick = (characterId: number) => {
-    setSelectedCharacterIndex((prev) => (prev === characterId ? null : characterId));
-    const score = Score(characterId, characters);
-    const result = RenderRelic(characterId, characters, score);
-    setSelectedInfo(result);
+  const storeRef = useRef(store);
+  useEffect(() => {
+    storeRef.current = store;
+  });
 
-    const build = parserChar(characterId, player, characters, score);
-    setBuildInfo(build);
+  const selected = useMemo(() => {
+    if (!player || selectedCharacterIndex === null) return null;
+    const score = Score(selectedCharacterIndex, characters);
+    return {
+      relics: RenderRelic(selectedCharacterIndex, characters, score),
+      build: parserChar(selectedCharacterIndex, player, characters, score),
+    };
+  }, [player, characters, selectedCharacterIndex]);
+
+  const handleCharacterClick = (index: number) => {
+    store.setSelectedCharacterIndex(index);
   };
 
   const handleTimerClick = () => {
@@ -77,6 +79,9 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
   useEffect(() => {
     if (!isValidUid) return;
+
+    const cached = storeRef.current;
+    if (requestVersion === 0 && cached.uid === uid && cached.player) return;
 
     const controller = new AbortController();
     let retryTimer: number | undefined;
@@ -100,8 +105,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
         if (!response.ok) throw new Error(result.error ?? "情報を取得できませんでした。");
         if (!result.data?.player) throw new Error("プレイヤー情報を取得できませんでした。");
 
-        setPlayer(result.data.player);
-        setCharacters(result.data.characters?.slice(0, 7) ?? []);
+        setLoaded(uid, result.data.player, result.data.characters?.slice(0, 7) ?? []);
       } catch (fetchError) {
         if (controller.signal.aborted) return;
         setError(fetchError instanceof Error ? fetchError.message : "情報を取得できませんでした。");
@@ -115,7 +119,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
       controller.abort();
       if (retryTimer) window.clearTimeout(retryTimer);
     };
-  }, [isValidUid, requestVersion, uid]);
+  }, [isValidUid, requestVersion, uid, setLoaded]);
 
   if (!isValidUid) return <main className={styles.main}>URLに有効なUIDが指定されていません。</main>;
   if (error) return <main className={styles.main}>{error}</main>;
@@ -152,7 +156,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
               type="button"
               key={character.id}
               aria-label={character.name ?? character.id}
-              className={`${styles.characterButton} ${selectedCharacterIndex == index ? styles.selected : ""}`}
+              className={`${styles.characterButton} ${selectedCharacterIndex === index ? styles.selected : ""}`}
               onClick={() => handleCharacterClick(index)}
             >
               {characterIcon && <Image src={characterIcon} alt="Character" width={128} height={128} loading="eager" unoptimized />}
@@ -161,19 +165,21 @@ export default function BuildLoader({ uid }: { uid: string }) {
         })}
       </section>
 
-      {selectedInfo && (
+      {selected && selectedCharacterIndex !== null && (
         <section className={styles.relicSection}>
           <div className={styles.canvasWrap}>
-            {selectedInfo.map((relic, index) => (
-              <RelicCanvasItem key={`${selectedCharacterIndex}-${index}`} relic={relic} />
+            {selected.relics.map((relic, index) => (
+              <Link key={`${selectedCharacterIndex}-${index}`} href={`/build/simulator?uid=${uid}&c=${selectedCharacterIndex}&r=${index}`} className={styles.relicButton}>
+                <RelicCanvasItem relic={relic} />
+              </Link>
             ))}
           </div>
         </section>
       )}
 
-      {buildInfo && (
+      {selected && (
         <section className={styles.buildSection}>
-          <BuildCanvasItem key={selectedCharacterIndex} build={buildInfo}></BuildCanvasItem>
+          <BuildCanvasItem key={selectedCharacterIndex} build={selected.build} />
         </section>
       )}
     </main>

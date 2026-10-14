@@ -176,8 +176,6 @@ export function starDraw(canvas: any, ctx: any, width: number, height: number, b
         relic.sub_affix.forEach((sub: any, j: any) => {
           const img = relicSubImgs[subIndex++];
 
-          // console.log(sub.count);
-
           ctx.drawImage(img, 1500, 50 + (i * 170 + j * 34), img.width / 2.7, img.height / 2.7);
 
           ctx.font = "25px 'Kaisei Tokumin'";

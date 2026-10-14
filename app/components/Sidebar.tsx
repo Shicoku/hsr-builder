@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import styles from "../styles/sidebar.module.css";
+import pkg from "../../package.json";
 
 type NavItem = {
   href: string;
@@ -16,7 +17,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/terms", label: "利用規約" },
   { href: "/privacy", label: "プライバシーポリシー" },
   { href: "/contact", label: "お問い合わせ" },
-  { href: "/version", label: "Ver: 1.1.1" },
+  { href: "/version", label: `Ver: ${pkg.version}` },
 ];
 
 export default function Sidebar() {

@@ -152,6 +152,15 @@
   top: 5;
 }
 
+.relicButton {
+  display: block;
+  border: 2px solid transparent;
+  border-radius: 8px;
+}
+.relicButton:hover {
+  opacity: 0.4;
+}
+
 .buildSection {
   margin-top: 1rem;
   width: 100%;
@@ -246,7 +255,7 @@
     justify-content: center;
   }
   .canvasItem {
-    width: 173px;
+    width: 160px;
     height: auto;
   }
 

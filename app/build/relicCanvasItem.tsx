@@ -84,7 +84,6 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
             ctx.fillText(sub.name, 35, y);
 
             ctx.textAlign = "right";
-            console.log(sub);
             if (sub.count - 1 != 0) {
               ctx.beginPath();
               ctx.arc(185, 123 + i * 25, 10, 0, Math.PI * 2);
