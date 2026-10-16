@@ -77,7 +77,7 @@ export function parserChar(cid: number, player: any, character: any, score: any)
     };
   });
 
-  const orderedNames = ["HP", "攻撃力", "防御力", "速度", "会心率", "会心ダメ", "撃破特効", "EP回復効率", "効果命中", "効果抵抗", "治癒量", "属性ダメ"];
+  const orderedNames = ["HP", "攻撃力", "防御力", "速度", "会心率", "会心ダメ", "撃破特効", "EP回復効率", "効果命中", "効果抵抗", "治癒量", "属性ダメ", "愉悦度"];
 
   status.sort((a, b) => orderedNames.indexOf(a.name) - orderedNames.indexOf(b.name));
 

@@ -105,7 +105,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
         if (!response.ok) throw new Error(result.error ?? "情報を取得できませんでした。");
         if (!result.data?.player) throw new Error("プレイヤー情報を取得できませんでした。");
 
-        setLoaded(uid, result.data.player, result.data.characters?.slice(0, 7) ?? []);
+        setLoaded(uid, result.data.player, result.data.characters?.slice(0, 8) ?? []);
       } catch (fetchError) {
         if (controller.signal.aborted) return;
         setError(fetchError instanceof Error ? fetchError.message : "情報を取得できませんでした。");
