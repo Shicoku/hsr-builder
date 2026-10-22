@@ -11,7 +11,7 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
 
     const ctx = canvas.getContext("2d");
     const width = 200;
-    const height = 210;
+    const height = 290;
     const scale = 2;
 
     canvas.width = width * scale;
@@ -36,11 +36,18 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
         };
       });
 
-    const font = new FontFace("Kaisei Tokumin", "url(/font/KaiseiTokumin-Regular.ttf)");
+    const font = new FontFace(
+      "Kaisei Tokumin",
+      "url(/font/KaiseiTokumin-Regular.ttf)",
+    );
     font.load().then(() => {
       document.fonts.add(font);
 
-      Promise.all([loadImage(relic.icon), loadImage(relic.main.icon), ...relic.sub.map((sub: any) => loadImage(sub.icon))])
+      Promise.all([
+        loadImage(relic.icon),
+        loadImage(relic.main.icon),
+        ...relic.sub.map((sub: any) => loadImage(sub.icon)),
+      ])
         .then(([icon, mainIcon, ...subIcons]) => {
           // Relic icon
           ctx.drawImage(icon, 10, 25, 64, 64);
@@ -99,6 +106,31 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
             ctx.fillText(sub.display, 170, y);
             ctx.textAlign = "start";
           });
+
+          ctx.beginPath();
+          ctx.moveTo(0, 230);
+          ctx.lineTo(200, 230);
+
+          ctx.globalAlpha = 0.5;
+          ctx.strokeStyle = "#fff";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.globalAlpha = 1.0;
+
+          let scoreRank = "D";
+          const score = relic.score;
+          if (score >= 100) scoreRank = "SS";
+          else if (score >= 90) scoreRank = "S";
+          else if (score >= 60) scoreRank = "A";
+          else if (score >= 40) scoreRank = "B";
+          else if (score >= 10) scoreRank = "C";
+
+          ctx.textAlign = "start";
+          ctx.font = "40px 'Kaisei Tokumin'";
+          ctx.fillText(score, 20, 280);
+          ctx.textAlign = "right";
+          ctx.fillText(scoreRank, 190, 280);
+          ctx.textAlign = "start";
         })
         .catch((error) => {
           console.error("Failed to load relic images:", error);

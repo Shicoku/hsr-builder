@@ -102,13 +102,23 @@ export default function BuildLoader({ uid }: { uid: string }) {
           }, retryAfterSeconds * 1_000);
           return;
         }
-        if (!response.ok) throw new Error(result.error ?? "情報を取得できませんでした。");
-        if (!result.data?.player) throw new Error("プレイヤー情報を取得できませんでした。");
+        if (!response.ok)
+          throw new Error(result.error ?? "情報を取得できませんでした。");
+        if (!result.data?.player)
+          throw new Error("プレイヤー情報を取得できませんでした。");
 
-        setLoaded(uid, result.data.player, result.data.characters?.slice(0, 8) ?? []);
+        setLoaded(
+          uid,
+          result.data.player,
+          result.data.characters?.slice(0, 8) ?? [],
+        );
       } catch (fetchError) {
         if (controller.signal.aborted) return;
-        setError(fetchError instanceof Error ? fetchError.message : "情報を取得できませんでした。");
+        setError(
+          fetchError instanceof Error
+            ? fetchError.message
+            : "情報を取得できませんでした。",
+        );
       } finally {
         if (!controller.signal.aborted) setIsLoading(false);
       }
@@ -121,13 +131,23 @@ export default function BuildLoader({ uid }: { uid: string }) {
     };
   }, [isValidUid, requestVersion, uid, setLoaded]);
 
-  if (!isValidUid) return <main className={styles.main}>URLに有効なUIDが指定されていません。</main>;
+  if (!isValidUid)
+    return (
+      <main className={styles.main}>URLに有効なUIDが指定されていません。</main>
+    );
   if (error) return <main className={styles.main}>{error}</main>;
 
   if (!player) {
     return (
       <main className={styles.main}>
-        <Image src={"/icons/spinner.svg"} width={100} height={100} alt="icon" className={spinner.spinner} priority />
+        <Image
+          src={"/icons/spinner.svg"}
+          width={100}
+          height={100}
+          alt="icon"
+          className={spinner.spinner}
+          priority
+        />
       </main>
     );
   }
@@ -137,11 +157,36 @@ export default function BuildLoader({ uid }: { uid: string }) {
   return (
     <main className={`${styles.main} ${styles.profileMain}`}>
       <section className={styles.profileSection}>
-        <button onClick={handleTimerClick} disabled={disabled} className={`${styles.reloadWrap} ${remaining > 0 ? styles.count : styles.reload}`}>
-          {isLoading ? "60" : remaining > 0 ? remaining : <Image src={"/icons/reload.svg"} width={100} height={100} alt="reload" priority />}
+        <button
+          onClick={handleTimerClick}
+          disabled={disabled}
+          className={`${styles.reloadWrap} ${remaining > 0 ? styles.count : styles.reload}`}
+        >
+          {isLoading ? (
+            "60"
+          ) : remaining > 0 ? (
+            remaining
+          ) : (
+            <Image
+              src={"/icons/reload.svg"}
+              width={100}
+              height={100}
+              alt="reload"
+              priority
+            />
+          )}
         </button>
 
-        {avatarIcon && <Image src={avatarIcon} alt="Avatar" width={96} height={96} loading="eager" unoptimized />}
+        {avatarIcon && (
+          <Image
+            src={avatarIcon}
+            alt="Avatar"
+            width={96}
+            height={96}
+            loading="eager"
+            unoptimized
+          />
+        )}
         <div className={styles.profileDetails}>
           <p>{player.nickname}</p>
           <p>{player.uid}</p>
@@ -159,7 +204,16 @@ export default function BuildLoader({ uid }: { uid: string }) {
               className={`${styles.characterButton} ${selectedCharacterIndex === index ? styles.selected : ""}`}
               onClick={() => handleCharacterClick(index)}
             >
-              {characterIcon && <Image src={characterIcon} alt="Character" width={128} height={128} loading="eager" unoptimized />}
+              {characterIcon && (
+                <Image
+                  src={characterIcon}
+                  alt="Character"
+                  width={128}
+                  height={128}
+                  loading="eager"
+                  unoptimized
+                />
+              )}
             </button>
           );
         })}
@@ -169,7 +223,11 @@ export default function BuildLoader({ uid }: { uid: string }) {
         <section className={styles.relicSection}>
           <div className={styles.canvasWrap}>
             {selected.relics.map((relic, index) => (
-              <Link key={`${selectedCharacterIndex}-${index}`} href={`/build/simulator?uid=${uid}&c=${selectedCharacterIndex}&r=${index}`} className={styles.relicButton}>
+              <Link
+                key={`${selectedCharacterIndex}-${index}`}
+                href={`/build/simulator?uid=${uid}&c=${selectedCharacterIndex}&r=${index}`}
+                className={styles.relicButton}
+              >
                 <RelicCanvasItem relic={relic} />
               </Link>
             ))}
@@ -179,7 +237,10 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
       {selected && (
         <section className={styles.buildSection}>
-          <BuildCanvasItem key={selectedCharacterIndex} build={selected.build} />
+          <BuildCanvasItem
+            key={selectedCharacterIndex}
+            build={selected.build}
+          />
         </section>
       )}
     </main>

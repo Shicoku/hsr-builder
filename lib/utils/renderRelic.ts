@@ -9,16 +9,22 @@ export function RenderRelic(cid: number, data: any, score: any) {
       name: relic.name,
       rarity: relic.rarity,
       level: relic.level,
-      icon: "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/" + relic.icon,
+      icon:
+        "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/" +
+        relic.icon,
       score: score[i].finalScore,
       main: {
         name: cleanAffixName(relic.main_affix.name),
-        icon: "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/" + relic.main_affix.icon,
+        icon:
+          "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/" +
+          relic.main_affix.icon,
         display: relic.main_affix.display,
       },
       sub: relic.sub_affix.map((sub: any) => ({
         name: cleanAffixName(sub.name),
-        icon: "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/" + sub.icon,
+        icon:
+          "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/" +
+          sub.icon,
         display: sub.display,
         count: sub.count,
       })),
