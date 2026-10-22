@@ -45,3 +45,5 @@ test/
 
 .open-next/
 .wrangler/
+
+.zed/
