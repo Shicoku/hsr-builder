@@ -1,0 +1,27 @@
+[
+  {
+    "label": "dev",
+    "command": "bun",
+    "args": ["run", "dev"],
+    "use_new_terminal": true,
+    "allow_concurrent_runs": false,
+  },
+  {
+    "label": "major",
+    "command": "bun",
+    "args": ["run", "major"],
+    "use_new_terminal": true,
+  },
+  {
+    "label": "minor",
+    "command": "bun",
+    "args": ["run", "minor"],
+    "use_new_terminal": true,
+  },
+  {
+    "label": "patch",
+    "command": "bun",
+    "args": ["run", "patch"],
+    "use_new_terminal": true,
+  },
+]
