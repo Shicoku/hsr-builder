@@ -6,12 +6,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "../styles/build.module.css";
 import spinner from "../styles/spinner.module.css";
 
-import { Score } from "../../lib/utils/scorer";
+import { Score, weightData, type Weight } from "../../lib/utils/scorer";
 import { RenderRelic } from "../../lib/utils/renderRelic";
 import { parserChar } from "../../lib/utils/renderBuild";
 
 import RelicCanvasItem from "./relicCanvasItem";
 import BuildCanvasItem from "./buildCanvasItem";
+import CharacterWeightDialog from "./characterWeightDialog";
 import { useBuildStore, type Character, type Player } from "./buildContext";
 
 type ApiResponse = {
@@ -22,7 +23,6 @@ type ApiResponse = {
 
 const COOLDOWN_SEC = 59;
 const EMPTY: Character[] = [];
-
 function assetUrl(icon: string | undefined) {
   if (!icon) return undefined;
   if (icon.startsWith("http://") || icon.startsWith("https://")) return icon;
@@ -38,11 +38,20 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const [remaining, setRemaining] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileView, setMobileView] = useState<"relic" | "build">("relic");
+  const [isWeightOpen, setIsWeightOpen] = useState(false);
 
   const isCached = store.uid === uid;
   const player = isCached ? store.player : null;
   const characters = isCached ? store.characters : EMPTY;
   const selectedCharacterIndex = isCached ? store.selectedCharacterIndex : null;
+  const selectedWeight = useMemo<Weight | null>(() => {
+    if (selectedCharacterIndex === null) return null;
+    return (
+      (weightData as Record<string, Weight>)[
+        characters[selectedCharacterIndex]?.id
+      ] ?? null
+    );
+  }, [characters, selectedCharacterIndex]);
 
   const isValidUid = /^\d{9}$/.test(uid);
 
@@ -71,6 +80,15 @@ export default function BuildLoader({ uid }: { uid: string }) {
   };
 
   const disabled = isLoading || remaining > 0;
+
+  useEffect(() => {
+    if (!isWeightOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsWeightOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [isWeightOpen]);
 
   useEffect(() => {
     if (remaining <= 0) return;
@@ -157,42 +175,54 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
   return (
     <main className={`${styles.main} ${styles.profileMain}`}>
-      <section className={styles.profileSection}>
-        <button
-          onClick={handleTimerClick}
-          disabled={disabled}
-          className={`${styles.reloadWrap} ${remaining > 0 ? styles.count : styles.reload}`}
-        >
-          {isLoading ? (
-            "60"
-          ) : remaining > 0 ? (
-            remaining
-          ) : (
+      <div className={styles.profileHeader}>
+        <section className={styles.profileSection}>
+          <button
+            onClick={handleTimerClick}
+            disabled={disabled}
+            className={`${styles.reloadWrap} ${remaining > 0 ? styles.count : styles.reload}`}
+          >
+            {isLoading ? (
+              "60"
+            ) : remaining > 0 ? (
+              remaining
+            ) : (
+              <Image
+                src={"/icons/reload.svg"}
+                width={100}
+                height={100}
+                alt="reload"
+                priority
+              />
+            )}
+          </button>
+
+          {avatarIcon && (
             <Image
-              src={"/icons/reload.svg"}
-              width={100}
-              height={100}
-              alt="reload"
-              priority
+              src={avatarIcon}
+              alt="Avatar"
+              width={96}
+              height={96}
+              loading="eager"
+              unoptimized
             />
           )}
-        </button>
-
-        {avatarIcon && (
-          <Image
-            src={avatarIcon}
-            alt="Avatar"
-            width={96}
-            height={96}
-            loading="eager"
-            unoptimized
-          />
+          <div className={styles.profileDetails}>
+            <p>{player.nickname}</p>
+            <p>{player.uid}</p>
+          </div>
+        </section>
+        {selectedWeight && (
+          <button
+            type="button"
+            className={styles.weightOpenButton}
+            onClick={() => setIsWeightOpen(true)}
+            aria-haspopup="dialog"
+          >
+            重要度を表示
+          </button>
         )}
-        <div className={styles.profileDetails}>
-          <p>{player.nickname}</p>
-          <p>{player.uid}</p>
-        </div>
-      </section>
+      </div>
 
       <section className={styles.characterSection}>
         {characters.map((character, index) => {
@@ -219,6 +249,16 @@ export default function BuildLoader({ uid }: { uid: string }) {
           );
         })}
       </section>
+
+      {isWeightOpen && selectedWeight && selectedCharacterIndex !== null && (
+        <CharacterWeightDialog
+          characterName={
+            characters[selectedCharacterIndex].name ?? "選択キャラ"
+          }
+          weight={selectedWeight}
+          onClose={() => setIsWeightOpen(false)}
+        />
+      )}
 
       {selected && selectedCharacterIndex !== null && (
         <>

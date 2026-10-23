@@ -1,5 +1,5 @@
 const res = await fetch("https://raw.githubusercontent.com/Mar-7th/StarRailScore/refs/heads/master/score.json");
-const weightData = await res.json();
+export const weightData = await res.json();
 
 // const maxVal = JSON.parse(fs.readFileSync("assets/max_value.json", "utf-8"));
 
