@@ -22,7 +22,10 @@ export default function BuildCanvasItem({ build }: { build: any }) {
     canvas.width = width;
     canvas.height = height;
 
-    const font = new FontFace("Kaisei Tokumin", "url(/font/KaiseiTokumin-Regular.ttf)");
+    const font = new FontFace(
+      "Kaisei Tokumin",
+      "url(/font/KaiseiTokumin-Regular.ttf)",
+    );
     font.load().then(() => {
       document.fonts.add(font);
 
@@ -34,11 +37,32 @@ export default function BuildCanvasItem({ build }: { build: any }) {
     <>
       {imageUrl ? (
         <div className={styles.buildImageWrap}>
-          <Image src={imageUrl} alt="Build" width={1920} height={1080} className={styles.buildImage} unoptimized />
+          <Image
+            src={imageUrl}
+            alt="Build"
+            width={1920}
+            height={1080}
+            className={styles.buildImage}
+            unoptimized
+          />
+          <a
+            href={imageUrl}
+            download={`buildcard-${build.id || "build"}.png`}
+            className={styles.downloadButton}
+          >
+            ダウンロード
+          </a>
         </div>
       ) : (
         <div className={spinner.loadingWrap}>
-          <Image src={"/icons/spinner.svg"} width={100} height={100} alt="icon" className={spinner.spinner} priority />
+          <Image
+            src={"/icons/spinner.svg"}
+            width={100}
+            height={100}
+            alt="icon"
+            className={spinner.spinner}
+            priority
+          />
           <canvas ref={canvasRef} className={styles.buildCanvas}></canvas>
         </div>
       )}

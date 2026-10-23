@@ -166,6 +166,10 @@
   width: 100%;
 }
 
+.mobileViewSwitcher {
+  display: none;
+}
+
 .buildCanvas {
   display: none;
 }
@@ -179,6 +183,26 @@
   height: auto;
   display: block;
   border-radius: 0.625rem;
+}
+
+.downloadButton {
+  display: block;
+  width: fit-content;
+  margin: 1rem auto 0;
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--input-border);
+  border-radius: 0.625rem;
+}
+
+.downloadButton:hover {
+  border-color: var(--accent);
+}
+
+.downloadButton:focus-visible {
+  outline: 3px solid rgb(103 232 249 / 40%);
+  outline-offset: 2px;
 }
 
 .reload {
@@ -250,6 +274,33 @@
     align-items: center;
     justify-content: center;
   }
+
+  .mobileViewSwitcher {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .mobileViewSwitcher button {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    color: var(--muted-text);
+    background: transparent;
+    border: 1px solid var(--input-border);
+    border-radius: 0.625rem;
+    cursor: pointer;
+  }
+
+  .mobileViewSwitcher .mobileViewSelected {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+
+  .mobileSectionHidden {
+    display: none;
+  }
+
   .canvasWrap {
     align-items: center;
     justify-content: center;

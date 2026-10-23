@@ -37,6 +37,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const [requestVersion, setRequestVersion] = useState(0);
   const [remaining, setRemaining] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [mobileView, setMobileView] = useState<"relic" | "build">("relic");
 
   const isCached = store.uid === uid;
   const player = isCached ? store.player : null;
@@ -220,23 +221,55 @@ export default function BuildLoader({ uid }: { uid: string }) {
       </section>
 
       {selected && selectedCharacterIndex !== null && (
-        <section className={styles.relicSection}>
-          <div className={styles.canvasWrap}>
-            {selected.relics.map((relic, index) => (
-              <Link
-                key={`${selectedCharacterIndex}-${index}`}
-                href={`/build/simulator?uid=${uid}&c=${selectedCharacterIndex}&r=${index}`}
-                className={styles.relicButton}
-              >
-                <RelicCanvasItem relic={relic} />
-              </Link>
-            ))}
+        <>
+          <div
+            className={styles.mobileViewSwitcher}
+            role="group"
+            aria-label="表示内容"
+          >
+            <button
+              type="button"
+              aria-pressed={mobileView === "relic"}
+              className={
+                mobileView === "relic" ? styles.mobileViewSelected : ""
+              }
+              onClick={() => setMobileView("relic")}
+            >
+              遺物一覧
+            </button>
+            <button
+              type="button"
+              aria-pressed={mobileView === "build"}
+              className={
+                mobileView === "build" ? styles.mobileViewSelected : ""
+              }
+              onClick={() => setMobileView("build")}
+            >
+              ビルドカード
+            </button>
           </div>
-        </section>
+          <section
+            className={`${styles.relicSection} ${mobileView === "build" ? styles.mobileSectionHidden : ""}`}
+          >
+            <div className={styles.canvasWrap}>
+              {selected.relics.map((relic, index) => (
+                <Link
+                  key={`${selectedCharacterIndex}-${index}`}
+                  href={`/build/simulator?uid=${uid}&c=${selectedCharacterIndex}&r=${index}`}
+                  className={styles.relicButton}
+                >
+                  <RelicCanvasItem relic={relic} />
+                </Link>
+              ))}
+            </div>
+          </section>
+        </>
       )}
 
       {selected && (
-        <section className={styles.buildSection}>
+        <section
+          className={`${styles.buildSection} ${mobileView === "relic" ? styles.mobileSectionHidden : ""}`}
+        >
           <BuildCanvasItem
             key={selectedCharacterIndex}
             build={selected.build}
