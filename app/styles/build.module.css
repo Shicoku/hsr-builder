@@ -70,6 +70,13 @@
   padding: 2rem 1.5rem;
 }
 
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 100%;
+}
+
 .profileSection {
   position: relative;
   display: flex;
@@ -116,6 +123,94 @@
   position: relative;
   top: -5;
   border: 2px solid var(--accent);
+}
+
+.weightSection {
+  position: relative;
+  width: min(100%, 56rem);
+  max-height: min(85vh, 48rem);
+  overflow-y: auto;
+  padding: 1rem;
+  color: var(--text);
+  background: var(--background);
+  border: 1px solid var(--input-border);
+  border-radius: 0.625rem;
+  box-shadow: 0 1rem 3rem rgb(0 0 0 / 35%);
+}
+
+.weightOverlay {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(0 0 0 / 65%);
+}
+
+.weightOpenButton,
+.weightCloseButton {
+  color: var(--text);
+  background: var(--background);
+  border: 1px solid var(--input-border);
+  border-radius: 0.625rem;
+  cursor: pointer;
+}
+
+.weightOpenButton {
+  padding: 0.7rem 1rem;
+}
+
+.weightOpenButton:hover,
+.weightCloseButton:hover {
+  border-color: var(--accent);
+}
+
+.weightCloseButton {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.25rem;
+}
+
+.weightSection h2,
+.weightGroup h3 {
+  margin: 0 0 0.75rem;
+}
+
+.weightSection h2 {
+  font-size: 1.1rem;
+}
+
+.weightGroups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1rem;
+}
+
+.weightGroup h3 {
+  color: var(--muted-text);
+  font-size: 0.9rem;
+}
+
+.weightRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--input-border);
+  font-size: 0.9rem;
+}
+
+.weightRow strong {
+  flex-shrink: 0;
+}
+
+.weightRow span {
+  text-align: right;
+  color: var(--muted-text);
 }
 
 .relicSection {
@@ -250,6 +345,13 @@
 @media (max-width: 640px) {
   .profileMain {
     align-items: center;
+  }
+
+  .profileHeader {
+    align-items: flex-start;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .characterSection {
