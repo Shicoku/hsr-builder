@@ -101,6 +101,44 @@
   margin-top: 1rem;
 }
 
+.updated {
+  animation: updatedEnter 420ms ease-out;
+}
+
+@keyframes updatedEnter {
+  0% {
+    opacity: 0.55;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reloadSpinning {
+  display: block;
+  animation: reloadSpin 800ms linear infinite;
+}
+
+@keyframes reloadSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .updated,
+  .reloadSpinning {
+    animation: none;
+  }
+
+  .updated {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+}
+
 .characterButton {
   display: flex;
   align-items: center;

@@ -31,17 +31,34 @@ export function BuildProvider({ children }: { children: ReactNode }) {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedCharacterIndex, setSelectedCharacterIndex] = useState<number | null>(null);
   const uidRef = useRef<string | null>(null);
+  const charactersRef = useRef(characters);
+  const selectedCharacterIndexRef = useRef(selectedCharacterIndex);
 
-  const setLoaded = useCallback((nextUid: string, nextPlayer: Player, nextCharacters: Character[]) => {
-    // 別のUIDを読み込んだときは選択をリセットする
-    if (uidRef.current !== nextUid) setSelectedCharacterIndex(null);
-    uidRef.current = nextUid;
-    setUid(nextUid);
-    setPlayer(nextPlayer);
-    setCharacters(nextCharacters);
+  const updateSelectedCharacterIndex = useCallback((index: number | null) => {
+    selectedCharacterIndexRef.current = index;
+    setSelectedCharacterIndex(index);
   }, []);
 
-  const value = useMemo(() => ({ uid, player, characters, selectedCharacterIndex, setLoaded, setSelectedCharacterIndex }), [uid, player, characters, selectedCharacterIndex, setLoaded]);
+  const setLoaded = useCallback((nextUid: string, nextPlayer: Player, nextCharacters: Character[]) => {
+    const isSameUid = uidRef.current === nextUid;
+    const currentIndex = selectedCharacterIndexRef.current;
+    const selectedCharacterId = isSameUid && currentIndex !== null
+      ? charactersRef.current[currentIndex]?.id
+      : undefined;
+
+    // 再取得後も同じキャラクターを選択し、一覧の順序変更にも追従する
+    const nextSelectedIndex = selectedCharacterId
+      ? nextCharacters.findIndex((character) => character.id === selectedCharacterId)
+      : -1;
+    updateSelectedCharacterIndex(nextSelectedIndex >= 0 ? nextSelectedIndex : null);
+    uidRef.current = nextUid;
+    setUid(nextUid);
+    charactersRef.current = nextCharacters;
+    setPlayer(nextPlayer);
+    setCharacters(nextCharacters);
+  }, [updateSelectedCharacterIndex]);
+
+  const value = useMemo(() => ({ uid, player, characters, selectedCharacterIndex, setLoaded, setSelectedCharacterIndex: updateSelectedCharacterIndex }), [uid, player, characters, selectedCharacterIndex, setLoaded, updateSelectedCharacterIndex]);
 
   return <BuildContext.Provider value={value}>{children}</BuildContext.Provider>;
 }

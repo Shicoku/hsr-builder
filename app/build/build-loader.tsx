@@ -39,6 +39,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [mobileView, setMobileView] = useState<"relic" | "build">("relic");
   const [isWeightOpen, setIsWeightOpen] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
 
   const isCached = store.uid === uid;
   const player = isCached ? store.player : null;
@@ -56,6 +57,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const isValidUid = /^\d{9}$/.test(uid);
 
   const storeRef = useRef(store);
+  const updatedTimerRef = useRef<number | undefined>(undefined);
   useEffect(() => {
     storeRef.current = store;
   });
@@ -131,6 +133,11 @@ export default function BuildLoader({ uid }: { uid: string }) {
           result.data.player,
           result.data.characters?.slice(0, 8) ?? [],
         );
+        if (requestVersion > 0) {
+          setIsUpdated(true);
+          if (updatedTimerRef.current) window.clearTimeout(updatedTimerRef.current);
+          updatedTimerRef.current = window.setTimeout(() => setIsUpdated(false), 1400);
+        }
       } catch (fetchError) {
         if (controller.signal.aborted) return;
         setError(
@@ -149,6 +156,10 @@ export default function BuildLoader({ uid }: { uid: string }) {
       if (retryTimer) window.clearTimeout(retryTimer);
     };
   }, [isValidUid, requestVersion, uid, setLoaded]);
+
+  useEffect(() => () => {
+    if (updatedTimerRef.current) window.clearTimeout(updatedTimerRef.current);
+  }, []);
 
   if (!isValidUid)
     return (
@@ -183,7 +194,14 @@ export default function BuildLoader({ uid }: { uid: string }) {
             className={`${styles.reloadWrap} ${remaining > 0 ? styles.count : styles.reload}`}
           >
             {isLoading ? (
-              "60"
+              <Image
+                src="/icons/reload.svg"
+                width={100}
+                height={100}
+                alt="更新中"
+                className={styles.reloadSpinning}
+                priority
+              />
             ) : remaining > 0 ? (
               remaining
             ) : (
@@ -224,7 +242,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
         )}
       </div>
 
-      <section className={styles.characterSection}>
+      <section className={`${styles.characterSection} ${isUpdated ? styles.updated : ""}`}>
         {characters.map((character, index) => {
           const characterIcon = assetUrl(character.icon);
           return (
@@ -289,7 +307,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
             </button>
           </div>
           <section
-            className={`${styles.relicSection} ${mobileView === "build" ? styles.mobileSectionHidden : ""}`}
+            className={`${styles.relicSection} ${isUpdated ? styles.updated : ""} ${mobileView === "build" ? styles.mobileSectionHidden : ""}`}
           >
             <div className={styles.canvasWrap}>
               {selected.relics.map((relic, index) => (
@@ -308,7 +326,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
       {selected && (
         <section
-          className={`${styles.buildSection} ${mobileView === "relic" ? styles.mobileSectionHidden : ""}`}
+          className={`${styles.buildSection} ${isUpdated ? styles.updated : ""} ${mobileView === "relic" ? styles.mobileSectionHidden : ""}`}
         >
           <BuildCanvasItem
             key={selectedCharacterIndex}
