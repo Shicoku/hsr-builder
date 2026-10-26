@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 export type Player = {
   uid?: string;
@@ -25,42 +32,70 @@ type BuildStore = {
 
 const BuildContext = createContext<BuildStore | null>(null);
 
-export function BuildProvider({ children }: { children: ReactNode }) {
-  const [uid, setUid] = useState<string | null>(null);
-  const [player, setPlayer] = useState<Player | null>(null);
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [selectedCharacterIndex, setSelectedCharacterIndex] = useState<number | null>(null);
-  const uidRef = useRef<string | null>(null);
-  const charactersRef = useRef(characters);
-  const selectedCharacterIndexRef = useRef(selectedCharacterIndex);
+type BuildState = {
+  uid: string | null;
+  player: Player | null;
+  characters: Character[];
+  selectedCharacterId: string | null;
+};
 
-  const updateSelectedCharacterIndex = useCallback((index: number | null) => {
-    selectedCharacterIndexRef.current = index;
-    setSelectedCharacterIndex(index);
+const INITIAL_STATE: BuildState = {
+  uid: null,
+  player: null,
+  characters: [],
+  selectedCharacterId: null,
+};
+
+export function BuildProvider({ children }: { children: ReactNode }) {
+  const [state, setState] = useState(INITIAL_STATE);
+
+  const setLoaded = useCallback(
+    (uid: string, player: Player, characters: Character[]) => {
+      setState((current) => {
+        const selectedCharacterId =
+          current.uid === uid ? current.selectedCharacterId : null;
+        const hasSelection =
+          selectedCharacterId &&
+          characters.some((character) => character.id === selectedCharacterId);
+
+        return {
+          uid,
+          player,
+          characters,
+          selectedCharacterId: hasSelection ? selectedCharacterId : null,
+        };
+      });
+    },
+    [],
+  );
+
+  const setSelectedCharacterIndex = useCallback((index: number | null) => {
+    setState((current) => ({
+      ...current,
+      selectedCharacterId:
+        index === null ? null : (current.characters[index]?.id ?? null),
+    }));
   }, []);
 
-  const setLoaded = useCallback((nextUid: string, nextPlayer: Player, nextCharacters: Character[]) => {
-    const isSameUid = uidRef.current === nextUid;
-    const currentIndex = selectedCharacterIndexRef.current;
-    const selectedCharacterId = isSameUid && currentIndex !== null
-      ? charactersRef.current[currentIndex]?.id
-      : undefined;
+  const selectedCharacterIndex = state.characters.findIndex(
+    (character) => character.id === state.selectedCharacterId,
+  );
+  const value = useMemo(
+    () => ({
+      uid: state.uid,
+      player: state.player,
+      characters: state.characters,
+      selectedCharacterIndex:
+        selectedCharacterIndex >= 0 ? selectedCharacterIndex : null,
+      setLoaded,
+      setSelectedCharacterIndex,
+    }),
+    [state, selectedCharacterIndex, setLoaded, setSelectedCharacterIndex],
+  );
 
-    // 再取得後も同じキャラクターを選択し、一覧の順序変更にも追従する
-    const nextSelectedIndex = selectedCharacterId
-      ? nextCharacters.findIndex((character) => character.id === selectedCharacterId)
-      : -1;
-    updateSelectedCharacterIndex(nextSelectedIndex >= 0 ? nextSelectedIndex : null);
-    uidRef.current = nextUid;
-    setUid(nextUid);
-    charactersRef.current = nextCharacters;
-    setPlayer(nextPlayer);
-    setCharacters(nextCharacters);
-  }, [updateSelectedCharacterIndex]);
-
-  const value = useMemo(() => ({ uid, player, characters, selectedCharacterIndex, setLoaded, setSelectedCharacterIndex: updateSelectedCharacterIndex }), [uid, player, characters, selectedCharacterIndex, setLoaded, updateSelectedCharacterIndex]);
-
-  return <BuildContext.Provider value={value}>{children}</BuildContext.Provider>;
+  return (
+    <BuildContext.Provider value={value}>{children}</BuildContext.Provider>
+  );
 }
 
 export function useBuildStore() {

@@ -20,10 +20,14 @@ const N = 100_000;
 
 const fmt = (n: number) => n.toFixed(1);
 const label = (type: string) => STAT_LABEL[type as StatType] ?? type;
-const show = (value: number, type: string) => `${displayValue(value, type)}${isPercent(type) ? "%" : ""}`;
+const show = (value: number, type: string) =>
+  `${displayValue(value, type)}${isPercent(type) ? "%" : ""}`;
 
 // メインステータスの表示値(四捨五入。%系は小数第1位まで)
-const showMain = (value: number, type: string) => (isPercent(type) ? `${(Math.round(value * 1000) / 10).toFixed(1)}%` : `${Math.round(value)}`);
+const showMain = (value: number, type: string) =>
+  isPercent(type)
+    ? `${(Math.round(value * 1000) / 10).toFixed(1)}%`
+    : `${Math.round(value)}`;
 
 function assetUrl(icon: string | undefined) {
   if (!icon) return undefined;
@@ -43,7 +47,10 @@ export default function RelicSimulator({ relic, charId, slot }: Props) {
 
   const weight = useMemo(() => getWeight(charId), [charId]);
   const subs: SubAffix[] = relic.sub_affix;
-  const mainScore = useMemo(() => calcMainScore(relic, weight, slot), [relic, weight, slot]);
+  const mainScore = useMemo(
+    () => calcMainScore(relic, weight, slot),
+    [relic, weight, slot],
+  );
 
   useEffect(() => {
     if (relic.level < 15) return;
@@ -109,7 +116,8 @@ export default function RelicSimulator({ relic, charId, slot }: Props) {
           {sim ? (
             <>
               <p>
-                最低 {fmt(sim.min)} / 最高 {fmt(sim.max)} / 平均 {fmt(sim.mean)} / スコアが上がる確率 {(sim.upRate * 100).toFixed(2)}%
+                最低 {fmt(sim.min)} / 最高 {fmt(sim.max)} / 平均 {fmt(sim.mean)}{" "}
+                / スコアが上がる確率 {(sim.upRate * 100).toFixed(2)}%
               </p>
               <Histogram r={sim} />
             </>
@@ -152,17 +160,28 @@ function RelicHeader({ relic }: { relic: any }) {
   const main = relic.main_affix;
   const relicIcon = assetUrl(relic.icon);
   const mainIcon = assetUrl(main?.icon);
-  const mainLabel = main?.name ?? STAT_LABEL[main?.type as StatType] ?? main?.type;
+  const mainLabel =
+    main?.name ?? STAT_LABEL[main?.type as StatType] ?? main?.type;
   const mainValue = main ? showMain(main.value, main.type) : "";
 
   return (
     <div className={styles.relicHeader}>
-      {relicIcon && <Image src={relicIcon} alt={relic.name ?? "遺物"} width={80} height={80} unoptimized />}
+      {relicIcon && (
+        <Image
+          src={relicIcon}
+          alt={relic.name ?? "遺物"}
+          width={80}
+          height={80}
+          unoptimized
+        />
+      )}
       <div>
         <p className={styles.relicName}>{relic.name}</p>
         <p>+{relic.level}</p>
         <p className={styles.mainStat}>
-          {mainIcon && <Image src={mainIcon} alt="" width={24} height={24} unoptimized />}
+          {mainIcon && (
+            <Image src={mainIcon} alt="" width={24} height={24} unoptimized />
+          )}
           {mainLabel} {mainValue}
         </p>
       </div>
@@ -186,20 +205,41 @@ function Histogram({ r }: { r: SimResult }) {
         const h = (c / maxCount) * plotH;
         const from = r.lo + i;
         return (
-          <rect key={i} x={M.l + i * bw} y={H - M.b - h} width={Math.max(bw - 1, 1)} height={h} fill={from + 0.5 > r.base ? "#e5534b" : "#6b7fd7"}>
+          <rect
+            key={i}
+            x={M.l + i * bw}
+            y={H - M.b - h}
+            width={Math.max(bw - 1, 1)}
+            height={h}
+            fill={from + 0.5 > r.base ? "#e5534b" : "#6b7fd7"}
+          >
             <title>{`${from}〜${from + 1}: ${c}回`}</title>
           </rect>
         );
       })}
       {r.bins.map((_, i) =>
         i % labelStep === 0 ? (
-          <text key={i} x={M.l + i * bw} y={H - M.b + 16} fontSize="12" textAnchor="middle" fill="currentColor">
+          <text
+            key={i}
+            x={M.l + i * bw}
+            y={H - M.b + 16}
+            fontSize="12"
+            textAnchor="middle"
+            fill="currentColor"
+          >
             {r.lo + i}
           </text>
         ) : null,
       )}
       <line x1={M.l} x2={W - M.r} y1={H - M.b} y2={H - M.b} stroke="#888" />
-      <line x1={baseX} x2={baseX} y1={M.t} y2={H - M.b} stroke="currentColor" strokeDasharray="4" />
+      <line
+        x1={baseX}
+        x2={baseX}
+        y1={M.t}
+        y2={H - M.b}
+        stroke="currentColor"
+        strokeDasharray="4"
+      />
       <text x={baseX + 4} y={M.t + 12} fontSize="12" fill="currentColor">
         現在
       </text>

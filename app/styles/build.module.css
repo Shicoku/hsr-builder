@@ -380,6 +380,11 @@
   margin: 0;
 }
 
+.refreshError {
+  margin: 0;
+  color: var(--error);
+}
+
 @media (max-width: 640px) {
   .profileMain {
     align-items: center;

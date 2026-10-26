@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "../styles/build.module.css";
 import spinner from "../styles/spinner.module.css";
 
@@ -23,6 +23,7 @@ type ApiResponse = {
 
 const COOLDOWN_SEC = 59;
 const EMPTY: Character[] = [];
+
 function assetUrl(icon: string | undefined) {
   if (!icon) return undefined;
   if (icon.startsWith("http://") || icon.startsWith("https://")) return icon;
@@ -55,12 +56,6 @@ export default function BuildLoader({ uid }: { uid: string }) {
   }, [characters, selectedCharacterIndex]);
 
   const isValidUid = /^\d{9}$/.test(uid);
-
-  const storeRef = useRef(store);
-  const updatedTimerRef = useRef<number | undefined>(undefined);
-  useEffect(() => {
-    storeRef.current = store;
-  });
 
   const selected = useMemo(() => {
     if (!player || selectedCharacterIndex === null) return null;
@@ -101,8 +96,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
   useEffect(() => {
     if (!isValidUid) return;
 
-    const cached = storeRef.current;
-    if (requestVersion === 0 && cached.uid === uid && cached.player) return;
+    if (requestVersion === 0 && isCached) return;
 
     const controller = new AbortController();
     let retryTimer: number | undefined;
@@ -135,8 +129,6 @@ export default function BuildLoader({ uid }: { uid: string }) {
         );
         if (requestVersion > 0) {
           setIsUpdated(true);
-          if (updatedTimerRef.current) window.clearTimeout(updatedTimerRef.current);
-          updatedTimerRef.current = window.setTimeout(() => setIsUpdated(false), 1400);
         }
       } catch (fetchError) {
         if (controller.signal.aborted) return;
@@ -155,17 +147,19 @@ export default function BuildLoader({ uid }: { uid: string }) {
       controller.abort();
       if (retryTimer) window.clearTimeout(retryTimer);
     };
-  }, [isValidUid, requestVersion, uid, setLoaded]);
+  }, [isValidUid, isCached, requestVersion, uid, setLoaded]);
 
-  useEffect(() => () => {
-    if (updatedTimerRef.current) window.clearTimeout(updatedTimerRef.current);
-  }, []);
+  useEffect(() => {
+    if (!isUpdated) return;
+    const timer = window.setTimeout(() => setIsUpdated(false), 500);
+    return () => window.clearTimeout(timer);
+  }, [isUpdated]);
 
   if (!isValidUid)
     return (
       <main className={styles.main}>URLに有効なUIDが指定されていません。</main>
     );
-  if (error) return <main className={styles.main}>{error}</main>;
+  if (error && !player) return <main className={styles.main}>{error}</main>;
 
   if (!player) {
     return (
@@ -189,27 +183,23 @@ export default function BuildLoader({ uid }: { uid: string }) {
       <div className={styles.profileHeader}>
         <section className={styles.profileSection}>
           <button
+            type="button"
+            aria-label={
+              isLoading ? "プロフィールを更新中" : "プロフィールを再読み込み"
+            }
             onClick={handleTimerClick}
             disabled={disabled}
             className={`${styles.reloadWrap} ${remaining > 0 ? styles.count : styles.reload}`}
           >
-            {isLoading ? (
+            {remaining > 0 && !isLoading ? (
+              remaining
+            ) : (
               <Image
                 src="/icons/reload.svg"
                 width={100}
                 height={100}
-                alt="更新中"
-                className={styles.reloadSpinning}
-                priority
-              />
-            ) : remaining > 0 ? (
-              remaining
-            ) : (
-              <Image
-                src={"/icons/reload.svg"}
-                width={100}
-                height={100}
-                alt="reload"
+                alt=""
+                className={isLoading ? styles.reloadSpinning : undefined}
                 priority
               />
             )}
@@ -230,6 +220,11 @@ export default function BuildLoader({ uid }: { uid: string }) {
             <p>{player.uid}</p>
           </div>
         </section>
+        {error && (
+          <p className={styles.refreshError} role="alert">
+            {error}
+          </p>
+        )}
         {selectedWeight && (
           <button
             type="button"
@@ -242,7 +237,9 @@ export default function BuildLoader({ uid }: { uid: string }) {
         )}
       </div>
 
-      <section className={`${styles.characterSection} ${isUpdated ? styles.updated : ""}`}>
+      <section
+        className={`${styles.characterSection} ${isUpdated ? styles.updated : ""}`}
+      >
         {characters.map((character, index) => {
           const characterIcon = assetUrl(character.icon);
           return (
