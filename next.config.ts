@@ -4,7 +4,13 @@ import createMDX from "@next/mdx";
 
 const nextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
-  allowedDevOrigins: ["192.168.151.178"],
+  // Permit access through either PC's private LAN address.
+  allowedDevOrigins: [
+    "127.0.0.1",
+    "192.168.*.*",
+    "10.*.*.*",
+    ...Array.from({ length: 16 }, (_, index) => `172.${index + 16}.*.*`),
+  ],
 };
 
 const withMDX = createMDX({
