@@ -27,7 +27,7 @@ const kaisei = Kaisei_Tokumin({
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ja" className="h-full antialiased">
-      <body className={`min-h-full flex flex-col ${kaisei.className}`}>
+      <body suppressHydrationWarning className={`min-h-full flex flex-col ${kaisei.className}`}>
         <ServiceWorkerRegistration />
         <Sidebar />
         {children}

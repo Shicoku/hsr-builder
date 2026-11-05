@@ -148,6 +148,17 @@
 .footer {
   margin-top: auto;
   padding: 16px;
+  color: var(--muted-text);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer p + p {
+  margin-top: 4px;
 }
 
 @media (max-width: 768px) {

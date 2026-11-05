@@ -26,14 +26,32 @@ export default function Sidebar() {
 
   return (
     <>
-      <button type="button" className={styles.toggle} aria-expanded={isOpen} aria-controls="build-sidebar" onClick={() => setIsOpen((prev) => !prev)}>
-        <span className={`${styles.toggleIcon} ${isOpen ? styles.open : ""}`} aria-hidden="true" />
-        <span className={styles.srOnly}>メニューを{isOpen ? "閉じる" : "開く"}</span>
+      <button
+        type="button"
+        className={styles.toggle}
+        aria-expanded={isOpen}
+        aria-controls="build-sidebar"
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
+        <span
+          className={`${styles.toggleIcon} ${isOpen ? styles.open : ""}`}
+          aria-hidden="true"
+        />
+        <span className={styles.srOnly}>
+          メニューを{isOpen ? "閉じる" : "開く"}
+        </span>
       </button>
 
-      <div className={`${styles.overlay} ${isOpen ? styles.show : styles.hide}`} onClick={() => setIsOpen(false)} aria-hidden="true" />
+      <div
+        className={`${styles.overlay} ${isOpen ? styles.show : styles.hide}`}
+        onClick={() => setIsOpen(false)}
+        aria-hidden="true"
+      />
 
-      <aside id="build-sidebar" className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
+      <aside
+        id="build-sidebar"
+        className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}
+      >
         <div className={styles.brand}>
           <Link href="/" onClick={() => setIsOpen(false)}>
             ビルドカード
@@ -46,7 +64,12 @@ export default function Sidebar() {
               const isActive = pathname === item.href;
               return (
                 <li key={item.href}>
-                  <Link href={item.href} className={styles.navLink} data-active={isActive} onClick={() => setIsOpen(false)}>
+                  <Link
+                    href={item.href}
+                    className={styles.navLink}
+                    data-active={isActive}
+                    onClick={() => setIsOpen(false)}
+                  >
                     {item.label}
                   </Link>
                 </li>
@@ -57,7 +80,7 @@ export default function Sidebar() {
 
         <div className={styles.footer}>
           <p>&copy; 2026 Shicoku / 詩哭</p>
-          <p>すべての権利は元の所有者に帰属します。</p>
+          <p lang="en">All rights reserved by miHoYo</p>
         </div>
       </aside>
     </>
