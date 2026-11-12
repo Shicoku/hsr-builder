@@ -169,10 +169,12 @@ export default function ScoreToolPage() {
   const mainOptions = Object.keys(character?.main?.[slot] ?? {}).filter(
     (type) => (character?.main?.[slot]?.[type] ?? 0) > 0,
   );
-  const subOptions = Object.keys(character?.weight ?? {}).filter(
+  const subOptions = [
+    ...new Set([...Object.keys(character?.weight ?? {}), "DefenceDelta"]),
+  ].filter(
     (type) =>
       type !== mainType &&
-      (character?.weight?.[type] ?? 0) > 0 &&
+      ((character?.weight?.[type] ?? 0) > 0 || type === "DefenceDelta") &&
       type in maxVal,
   );
 
