@@ -14,6 +14,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { href: "/use", label: "使い方" },
   { href: "/fap", label: "よくある質問" },
+  { href: "/tools", label: "ツール" },
   { href: "/terms", label: "利用規約" },
   { href: "/privacy", label: "プライバシーポリシー" },
   { href: "/contact", label: "お問い合わせ" },

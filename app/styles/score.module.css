@@ -1,0 +1,279 @@
+.main {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 4rem 1.5rem;
+  color: var(--text);
+  background: var(--background);
+}
+
+.container {
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+}
+
+.title {
+  margin: 0;
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+}
+
+.description {
+  margin: 1rem 0 0;
+  color: var(--muted-text);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.8fr);
+  align-items: start;
+  gap: 1rem;
+}
+
+.formPanel,
+.resultPanel {
+  padding: 1.25rem;
+  background: var(--input-background);
+  border: 1px solid var(--input-border);
+  border-radius: 0.625rem;
+}
+
+.sectionTitle {
+  margin: 0 0 1rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--input-border);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.field {
+  display: grid;
+  min-width: 0;
+  gap: 0.45rem;
+  color: var(--muted-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.field select,
+.subRow select,
+.subRow input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.75rem;
+  color: var(--text);
+  background: var(--background);
+  border: 1px solid var(--input-border);
+  border-radius: 0.625rem;
+  font: inherit;
+  color-scheme: dark;
+}
+
+.field select:focus,
+.subRow select:focus,
+.subRow input:focus {
+  border-color: var(--accent);
+  outline: 3px solid var(--focus-ring);
+}
+
+.field select:focus-visible,
+.subRow select:focus-visible,
+.subRow input:focus-visible {
+  outline-offset: 2px;
+}
+
+.field select:disabled,
+.subRow select:disabled,
+.subRow input:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.subFieldset {
+  min-width: 0;
+  margin: 1.5rem 0 0;
+  padding: 1rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--input-border);
+}
+
+.subFieldset legend {
+  padding: 0 0.5rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.subFieldset legend span {
+  color: var(--muted-text);
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.subList {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.subRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(5.5rem, 0.38fr);
+  gap: 0.6rem;
+}
+
+.hint {
+  margin: 0.75rem 0 0;
+  color: var(--muted-text);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.resultPanel {
+  padding: 1.5rem;
+  border-color: rgb(103 232 249 / 35%);
+}
+
+.resultLabel {
+  margin: 0;
+  color: var(--muted-text);
+  font-size: 0.875rem;
+}
+
+.scoreLine {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  color: var(--accent);
+}
+
+.scoreLine strong {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(2.5rem, 7vw, 3rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.scoreLine span {
+  padding: 0.3rem 0.65rem;
+  color: var(--text);
+  border: 1px solid var(--input-border);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.breakdown {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.5rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--input-border);
+}
+
+.breakdown div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.85rem;
+}
+
+.breakdown dt {
+  color: var(--muted-text);
+}
+
+.breakdown dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.resultPlaceholder {
+  margin: 1rem 0 0;
+  color: var(--muted-text);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.formula {
+  margin: 1.5rem 0 0;
+  padding-top: 1rem;
+  color: var(--muted-text);
+  border-top: 1px solid var(--input-border);
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+
+.estimateNote {
+  margin: 0.75rem 0 0;
+  color: var(--muted-text);
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 6rem 1.25rem 3rem;
+  }
+
+  .title {
+    font-size: 1.9rem;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+}
+
+@media (max-width: 420px) {
+  .formPanel,
+  .resultPanel {
+    padding: 1rem;
+  }
+
+  .subRow {
+    grid-template-columns: minmax(0, 1fr) 5rem;
+  }
+}
