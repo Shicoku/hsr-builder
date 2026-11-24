@@ -26,7 +26,7 @@ export default function SimulatorView() {
   if (!relic) return null;
 
   return (
-    <main className={styles.main}>
+    <main className={`${styles.main} ${sim.simulatorPage}`}>
       <div className={sim.toolbar}>
         <button type="button" className={sim.btn} onClick={() => router.back()}>
           ← 戻る

@@ -112,12 +112,15 @@
   font-size: 24px;
 }
 
+.simulatorPage {
+  box-sizing: border-box;
+}
+
 /* ===== PC ===== */
 @media (min-width: 768px) {
   .simulator,
   .toolbar {
-    --sidebar-width: 360px; /* サイドバーの実際の幅に合わせる */
-    max-width: min(1280px, max(480px, calc(100vw - 2 * var(--sidebar-width))));
+    max-width: min(1280px, 100%);
   }
 
   .toolbar {
@@ -167,5 +170,11 @@
 
   .histogram text {
     font-size: 12px;
+  }
+}
+
+@media (min-width: 769px) {
+  .simulatorPage {
+    padding-left: calc(240px + 1.5rem);
   }
 }

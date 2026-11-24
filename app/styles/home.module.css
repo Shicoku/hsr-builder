@@ -6,6 +6,7 @@
   padding: 4rem 1.5rem;
   color: var(--text);
   background: var(--background);
+  box-sizing: border-box;
 }
 .content {
   width: 100%;
@@ -196,5 +197,11 @@
 @media (min-width: 640px) {
   .description {
     font-size: 1rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .main {
+    padding-left: calc(240px + 1.5rem);
   }
 }

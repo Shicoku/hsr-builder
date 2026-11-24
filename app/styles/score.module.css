@@ -6,6 +6,12 @@
   background: var(--background);
 }
 
+@media (min-width: 769px) {
+  .main {
+    padding-left: calc(240px + 1.5rem);
+  }
+}
+
 .container {
   width: 100%;
   max-width: 48rem;
