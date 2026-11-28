@@ -1,10 +1,10 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import styles from "../styles/build.module.css";
-import spinner from "../styles/spinner.module.css";
+'use client';
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import styles from '../styles/build.module.css';
+import spinner from '../styles/spinner.module.css';
 
-import { starDraw } from "../..//lib/utils/startDraw";
+import { starDraw } from '../..//lib/utils/startDraw';
 
 export default function BuildCanvasItem({ build }: { build: any }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -14,7 +14,7 @@ export default function BuildCanvasItem({ build }: { build: any }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const width = 1920;
@@ -22,10 +22,7 @@ export default function BuildCanvasItem({ build }: { build: any }) {
     canvas.width = width;
     canvas.height = height;
 
-    const font = new FontFace(
-      "Kaisei Tokumin",
-      "url(/font/KaiseiTokumin-Regular.ttf)",
-    );
+    const font = new FontFace('Kaisei Tokumin', 'url(/font/KaiseiTokumin-Regular.ttf)');
     font.load().then(() => {
       document.fonts.add(font);
 
@@ -47,7 +44,7 @@ export default function BuildCanvasItem({ build }: { build: any }) {
           />
           <a
             href={imageUrl}
-            download={`buildcard-${build.id || "build"}.png`}
+            download={`buildcard-${build.id || 'build'}.png`}
             className={styles.downloadButton}
           >
             ダウンロード
@@ -56,7 +53,7 @@ export default function BuildCanvasItem({ build }: { build: any }) {
       ) : (
         <div className={spinner.loadingWrap}>
           <Image
-            src={"/icons/spinner.svg"}
+            src={'/icons/spinner.svg'}
             width={100}
             height={100}
             alt="icon"

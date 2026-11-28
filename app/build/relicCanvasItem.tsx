@@ -1,6 +1,6 @@
-"use client";
-import { useEffect, useRef } from "react";
-import styles from "../styles/build.module.css";
+'use client';
+import { useEffect, useRef } from 'react';
+import styles from '../styles/build.module.css';
 
 export default function RelicCanvasItem({ relic }: { relic: any }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -9,7 +9,7 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     const width = 200;
     const height = 290;
     const scale = 2;
@@ -20,26 +20,23 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
     if (!ctx) return;
 
     ctx.scale(scale, scale);
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = '#fff';
     ctx.font = "18px 'Kaisei Tokumin'";
-    ctx.textAlign = "start";
+    ctx.textAlign = 'start';
 
     const loadImage = (src: string) =>
       new Promise<HTMLImageElement>((resolve, reject) => {
         const img = new window.Image();
-        img.crossOrigin = "anonymous";
+        img.crossOrigin = 'anonymous';
         img.src = src;
         img.onload = () => resolve(img);
         img.onerror = () => {
-          console.error("読み込み失敗:", src);
+          console.error('読み込み失敗:', src);
           reject(new Error(`画像読み込み失敗: ${src}`));
         };
       });
 
-    const font = new FontFace(
-      "Kaisei Tokumin",
-      "url(/font/KaiseiTokumin-Regular.ttf)",
-    );
+    const font = new FontFace('Kaisei Tokumin', 'url(/font/KaiseiTokumin-Regular.ttf)');
     font.load().then(() => {
       document.fonts.add(font);
 
@@ -75,7 +72,7 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
           ctx.lineTo(200, 100);
 
           ctx.globalAlpha = 0.5;
-          ctx.strokeStyle = "#fff";
+          ctx.strokeStyle = '#fff';
           ctx.lineWidth = 2;
           ctx.stroke();
 
@@ -87,24 +84,24 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
 
             ctx.drawImage(img, 10, y - 18, 20, 20);
 
-            ctx.textAlign = "start";
+            ctx.textAlign = 'start';
             ctx.fillText(sub.name, 35, y);
 
-            ctx.textAlign = "right";
+            ctx.textAlign = 'right';
             if (sub.count - 1 != 0) {
               ctx.beginPath();
               ctx.arc(185, 123 + i * 25, 10, 0, Math.PI * 2);
-              ctx.fillStyle = "#14e4b4";
+              ctx.fillStyle = '#14e4b4';
               ctx.fill();
               ctx.save();
-              ctx.globalCompositeOperation = "destination-out";
+              ctx.globalCompositeOperation = 'destination-out';
               ctx.font = "18px 'Kaisei Tokumin'";
               ctx.fillText(String(sub.count - 1), 190, y);
               ctx.restore();
             }
-            ctx.fillStyle = "#fff";
+            ctx.fillStyle = '#fff';
             ctx.fillText(sub.display, 170, y);
-            ctx.textAlign = "start";
+            ctx.textAlign = 'start';
           });
 
           ctx.beginPath();
@@ -112,28 +109,28 @@ export default function RelicCanvasItem({ relic }: { relic: any }) {
           ctx.lineTo(200, 230);
 
           ctx.globalAlpha = 0.5;
-          ctx.strokeStyle = "#fff";
+          ctx.strokeStyle = '#fff';
           ctx.lineWidth = 2;
           ctx.stroke();
           ctx.globalAlpha = 1.0;
 
-          let scoreRank = "D";
+          let scoreRank = 'D';
           const score = relic.score;
-          if (score >= 100) scoreRank = "SS";
-          else if (score >= 90) scoreRank = "S";
-          else if (score >= 60) scoreRank = "A";
-          else if (score >= 40) scoreRank = "B";
-          else if (score >= 10) scoreRank = "C";
+          if (score >= 100) scoreRank = 'SS';
+          else if (score >= 90) scoreRank = 'S';
+          else if (score >= 60) scoreRank = 'A';
+          else if (score >= 40) scoreRank = 'B';
+          else if (score >= 10) scoreRank = 'C';
 
-          ctx.textAlign = "start";
+          ctx.textAlign = 'start';
           ctx.font = "40px 'Kaisei Tokumin'";
           ctx.fillText(score, 20, 280);
-          ctx.textAlign = "right";
+          ctx.textAlign = 'right';
           ctx.fillText(scoreRank, 190, 280);
-          ctx.textAlign = "start";
+          ctx.textAlign = 'start';
         })
         .catch((error) => {
-          console.error("Failed to load relic images:", error);
+          console.error('Failed to load relic images:', error);
         });
     });
   }, [relic]);

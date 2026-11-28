@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #22242b;
@@ -15,5 +15,5 @@
 
 body {
   margin: 0;
-  font-family: "Kaisei Tokumin", Arial, Helvetica, sans-serif;
+  font-family: 'Kaisei Tokumin', Arial, Helvetica, sans-serif;
 }

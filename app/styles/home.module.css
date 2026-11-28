@@ -115,10 +115,10 @@
   font-size: 0.875rem;
   text-align: left;
 }
-.status[data-status="success"] {
+.status[data-status='success'] {
   color: var(--accent);
 }
-.status[data-status="error"] {
+.status[data-status='error'] {
   color: var(--error);
 }
 .supportLinks {

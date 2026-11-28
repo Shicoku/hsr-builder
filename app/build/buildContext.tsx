@@ -1,13 +1,6 @@
-"use client";
+'use client';
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
 export type Player = {
   uid?: string;
@@ -49,31 +42,25 @@ const INITIAL_STATE: BuildState = {
 export function BuildProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState(INITIAL_STATE);
 
-  const setLoaded = useCallback(
-    (uid: string, player: Player, characters: Character[]) => {
-      setState((current) => {
-        const selectedCharacterId =
-          current.uid === uid ? current.selectedCharacterId : null;
-        const hasSelection =
-          selectedCharacterId &&
-          characters.some((character) => character.id === selectedCharacterId);
+  const setLoaded = useCallback((uid: string, player: Player, characters: Character[]) => {
+    setState((current) => {
+      const selectedCharacterId = current.uid === uid ? current.selectedCharacterId : null;
+      const hasSelection =
+        selectedCharacterId && characters.some((character) => character.id === selectedCharacterId);
 
-        return {
-          uid,
-          player,
-          characters,
-          selectedCharacterId: hasSelection ? selectedCharacterId : null,
-        };
-      });
-    },
-    [],
-  );
+      return {
+        uid,
+        player,
+        characters,
+        selectedCharacterId: hasSelection ? selectedCharacterId : null,
+      };
+    });
+  }, []);
 
   const setSelectedCharacterIndex = useCallback((index: number | null) => {
     setState((current) => ({
       ...current,
-      selectedCharacterId:
-        index === null ? null : (current.characters[index]?.id ?? null),
+      selectedCharacterId: index === null ? null : (current.characters[index]?.id ?? null),
     }));
   }, []);
 
@@ -85,21 +72,18 @@ export function BuildProvider({ children }: { children: ReactNode }) {
       uid: state.uid,
       player: state.player,
       characters: state.characters,
-      selectedCharacterIndex:
-        selectedCharacterIndex >= 0 ? selectedCharacterIndex : null,
+      selectedCharacterIndex: selectedCharacterIndex >= 0 ? selectedCharacterIndex : null,
       setLoaded,
       setSelectedCharacterIndex,
     }),
     [state, selectedCharacterIndex, setLoaded, setSelectedCharacterIndex],
   );
 
-  return (
-    <BuildContext.Provider value={value}>{children}</BuildContext.Provider>
-  );
+  return <BuildContext.Provider value={value}>{children}</BuildContext.Provider>;
 }
 
 export function useBuildStore() {
   const ctx = useContext(BuildContext);
-  if (!ctx) throw new Error("BuildProvider の外で使われています");
+  if (!ctx) throw new Error('BuildProvider の外で使われています');
   return ctx;
 }

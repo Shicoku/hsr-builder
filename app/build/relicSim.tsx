@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import styles from "../styles/simulator.module.css";
-import { calcMainScore, getWeight } from "../../lib/utils/scorer";
+import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
+import styles from '../styles/simulator.module.css';
+import { calcMainScore, getWeight } from '../../lib/utils/scorer';
 import {
   STAT_LABEL,
   displayValue,
@@ -14,24 +14,22 @@ import {
   /*type RolledSub,*/ type SimResult,
   type StatType,
   type SubAffix,
-} from "../../lib/utils/relicSim";
+} from '../../lib/utils/relicSim';
 
 const N = 100_000;
 
 const fmt = (n: number) => n.toFixed(1);
 const label = (type: string) => STAT_LABEL[type as StatType] ?? type;
 const show = (value: number, type: string) =>
-  `${displayValue(value, type)}${isPercent(type) ? "%" : ""}`;
+  `${displayValue(value, type)}${isPercent(type) ? '%' : ''}`;
 
 // メインステータスの表示値(四捨五入。%系は小数第1位まで)
 const showMain = (value: number, type: string) =>
-  isPercent(type)
-    ? `${(Math.round(value * 1000) / 10).toFixed(1)}%`
-    : `${Math.round(value)}`;
+  isPercent(type) ? `${(Math.round(value * 1000) / 10).toFixed(1)}%` : `${Math.round(value)}`;
 
 function assetUrl(icon: string | undefined) {
   if (!icon) return undefined;
-  if (icon.startsWith("http://") || icon.startsWith("https://")) return icon;
+  if (icon.startsWith('http://') || icon.startsWith('https://')) return icon;
   return `https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/${icon}`;
 }
 
@@ -47,10 +45,7 @@ export default function RelicSimulator({ relic, charId, slot }: Props) {
 
   const weight = useMemo(() => getWeight(charId), [charId]);
   const subs: SubAffix[] = relic.sub_affix;
-  const mainScore = useMemo(
-    () => calcMainScore(relic, weight, slot),
-    [relic, weight, slot],
-  );
+  const mainScore = useMemo(() => calcMainScore(relic, weight, slot), [relic, weight, slot]);
 
   useEffect(() => {
     if (relic.level < 15) return;
@@ -116,8 +111,8 @@ export default function RelicSimulator({ relic, charId, slot }: Props) {
           {sim ? (
             <>
               <p>
-                最低 {fmt(sim.min)} / 最高 {fmt(sim.max)} / 平均 {fmt(sim.mean)}{" "}
-                / スコアが上がる確率 {(sim.upRate * 100).toFixed(2)}%
+                最低 {fmt(sim.min)} / 最高 {fmt(sim.max)} / 平均 {fmt(sim.mean)} /
+                スコアが上がる確率 {(sim.upRate * 100).toFixed(2)}%
               </p>
               <Histogram r={sim} />
             </>
@@ -160,28 +155,19 @@ function RelicHeader({ relic }: { relic: any }) {
   const main = relic.main_affix;
   const relicIcon = assetUrl(relic.icon);
   const mainIcon = assetUrl(main?.icon);
-  const mainLabel =
-    main?.name ?? STAT_LABEL[main?.type as StatType] ?? main?.type;
-  const mainValue = main ? showMain(main.value, main.type) : "";
+  const mainLabel = main?.name ?? STAT_LABEL[main?.type as StatType] ?? main?.type;
+  const mainValue = main ? showMain(main.value, main.type) : '';
 
   return (
     <div className={styles.relicHeader}>
       {relicIcon && (
-        <Image
-          src={relicIcon}
-          alt={relic.name ?? "遺物"}
-          width={80}
-          height={80}
-          unoptimized
-        />
+        <Image src={relicIcon} alt={relic.name ?? '遺物'} width={80} height={80} unoptimized />
       )}
       <div>
         <p className={styles.relicName}>{relic.name}</p>
         <p>+{relic.level}</p>
         <p className={styles.mainStat}>
-          {mainIcon && (
-            <Image src={mainIcon} alt="" width={24} height={24} unoptimized />
-          )}
+          {mainIcon && <Image src={mainIcon} alt="" width={24} height={24} unoptimized />}
           {mainLabel} {mainValue}
         </p>
       </div>
@@ -211,7 +197,7 @@ function Histogram({ r }: { r: SimResult }) {
             y={H - M.b - h}
             width={Math.max(bw - 1, 1)}
             height={h}
-            fill={from + 0.5 > r.base ? "#e5534b" : "#6b7fd7"}
+            fill={from + 0.5 > r.base ? '#e5534b' : '#6b7fd7'}
           >
             <title>{`${from}〜${from + 1}: ${c}回`}</title>
           </rect>
@@ -232,14 +218,7 @@ function Histogram({ r }: { r: SimResult }) {
         ) : null,
       )}
       <line x1={M.l} x2={W - M.r} y1={H - M.b} y2={H - M.b} stroke="#888" />
-      <line
-        x1={baseX}
-        x2={baseX}
-        y1={M.t}
-        y2={H - M.b}
-        stroke="currentColor"
-        strokeDasharray="4"
-      />
+      <line x1={baseX} x2={baseX} y1={M.t} y2={H - M.b} stroke="currentColor" strokeDasharray="4" />
       <text x={baseX + 4} y={M.t + 12} fontSize="12" fill="currentColor">
         現在
       </text>

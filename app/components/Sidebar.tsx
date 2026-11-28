@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import styles from "../styles/sidebar.module.css";
-import pkg from "../../package.json";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import styles from '../styles/sidebar.module.css';
+import pkg from '../../package.json';
 
 type NavItem = {
   href: string;
@@ -12,13 +12,13 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/use", label: "使い方" },
-  { href: "/fap", label: "よくある質問" },
-  { href: "/tools", label: "ツール" },
-  { href: "/terms", label: "利用規約" },
-  { href: "/privacy", label: "プライバシーポリシー" },
-  { href: "/contact", label: "お問い合わせ" },
-  { href: "/version", label: `Ver: ${pkg.version}` },
+  { href: '/use', label: '使い方' },
+  { href: '/fap', label: 'よくある質問' },
+  { href: '/tools', label: 'ツール' },
+  { href: '/terms', label: '利用規約' },
+  { href: '/privacy', label: 'プライバシーポリシー' },
+  { href: '/contact', label: 'お問い合わせ' },
+  { href: '/version', label: `Ver: ${pkg.version}` },
 ];
 
 export default function Sidebar() {
@@ -34,13 +34,8 @@ export default function Sidebar() {
         aria-controls="build-sidebar"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <span
-          className={`${styles.toggleIcon} ${isOpen ? styles.open : ""}`}
-          aria-hidden="true"
-        />
-        <span className={styles.srOnly}>
-          メニューを{isOpen ? "閉じる" : "開く"}
-        </span>
+        <span className={`${styles.toggleIcon} ${isOpen ? styles.open : ''}`} aria-hidden="true" />
+        <span className={styles.srOnly}>メニューを{isOpen ? '閉じる' : '開く'}</span>
       </button>
 
       <div
@@ -49,10 +44,7 @@ export default function Sidebar() {
         aria-hidden="true"
       />
 
-      <aside
-        id="build-sidebar"
-        className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}
-      >
+      <aside id="build-sidebar" className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
         <div className={styles.brand}>
           <Link href="/" onClick={() => setIsOpen(false)}>
             ビルドカード

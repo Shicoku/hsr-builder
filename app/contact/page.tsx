@@ -1,5 +1,5 @@
-import styles from "../styles/markdown.module.css";
-import contactStyles from "../styles/contact.module.css";
+import styles from '../styles/markdown.module.css';
+import contactStyles from '../styles/contact.module.css';
 
 export default function ContactPage() {
   return (

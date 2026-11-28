@@ -64,7 +64,7 @@
   border-color: var(--input-border);
 }
 
-.navLink[data-active="true"] {
+.navLink[data-active='true'] {
   color: var(--accent);
   border-color: var(--input-border);
   font-weight: 600;
@@ -92,7 +92,7 @@
 .toggleIcon,
 .toggleIcon::before,
 .toggleIcon::after {
-  content: "";
+  content: '';
   display: block;
   width: 18px;
   height: 2px;

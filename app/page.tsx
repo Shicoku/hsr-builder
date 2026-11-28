@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import styles from "./styles/home.module.css";
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import styles from './styles/home.module.css';
 
-const LAST_UID_STORAGE_KEY = "hsr-builder:last-uid";
-const TERMS_NOTICE_STORAGE_KEY = "hsr-builder:terms-notice-seen";
+const LAST_UID_STORAGE_KEY = 'hsr-builder:last-uid';
+const TERMS_NOTICE_STORAGE_KEY = 'hsr-builder:terms-notice-seen';
 
 export default function Home() {
   const router = useRouter();
-  const [uid, setUid] = useState("");
-  const [message, setMessage] = useState("");
+  const [uid, setUid] = useState('');
+  const [message, setMessage] = useState('');
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function Home() {
 
   function closeTermsNotice() {
     try {
-      window.localStorage.setItem(TERMS_NOTICE_STORAGE_KEY, "1");
+      window.localStorage.setItem(TERMS_NOTICE_STORAGE_KEY, '1');
     } catch {}
     dialogRef.current?.close();
   }
@@ -38,7 +38,7 @@ export default function Home() {
     const normalizedUid = uid.trim();
 
     if (!/^\d{9}$/.test(normalizedUid)) {
-      setMessage("UIDを入力してください");
+      setMessage('UIDを入力してください');
       return;
     }
 
@@ -72,16 +72,20 @@ export default function Home() {
               value={uid}
               onChange={(event) => {
                 setUid(event.target.value);
-                setMessage("");
+                setMessage('');
               }}
             />
-            <button className={styles.submitButton} type="submit" aria-label="UIDのビルドカードを作成する">
+            <button
+              className={styles.submitButton}
+              type="submit"
+              aria-label="UIDのビルドカードを作成する"
+            >
               <svg aria-hidden="true" viewBox="0 0 24 24">
                 <path d="M5 12h13M13 6l6 6-6 6" />
               </svg>
             </button>
           </div>
-          <p className={styles.status} data-status={message ? "error" : "idle"} aria-live="polite">
+          <p className={styles.status} data-status={message ? 'error' : 'idle'} aria-live="polite">
             {message}
           </p>
         </form>
@@ -94,11 +98,18 @@ export default function Home() {
         </nav>
       </section>
 
-      <dialog ref={dialogRef} className={styles.dialog} aria-labelledby="terms-dialog-title" onCancel={closeTermsNotice}>
+      <dialog
+        ref={dialogRef}
+        className={styles.dialog}
+        aria-labelledby="terms-dialog-title"
+        onCancel={closeTermsNotice}
+      >
         <h2 id="terms-dialog-title" className={styles.dialogTitle}>
           ご利用前にお読みください
         </h2>
-        <p className={styles.dialogText}>本サービスをご利用頂く前に利用規約を必ずお読みください。</p>
+        <p className={styles.dialogText}>
+          本サービスをご利用頂く前に利用規約を必ずお読みください。
+        </p>
         <div className={styles.dialogActions}>
           <a className={styles.dialogLink} href="/terms" target="_blank" rel="noopener noreferrer">
             利用規約を確認する

@@ -37,10 +37,10 @@
   font-size: 1rem;
   line-height: 1.6;
 }
-.status[data-status="success"] {
+.status[data-status='success'] {
   color: var(--accent);
 }
-.status[data-status="error"] {
+.status[data-status='error'] {
   color: var(--error);
 }
 .backLink {

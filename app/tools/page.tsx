@@ -1,28 +1,28 @@
-import Link from "next/link";
-import styles from "../styles/tools.module.css";
+import Link from 'next/link';
+import styles from '../styles/tools.module.css';
 
 type Tool = {
   name: string;
   description: string;
   category: string;
   href?: string;
-  status: "available" | "planned";
+  status: 'available' | 'planned';
 };
 
 const TOOLS: Tool[] = [
   {
-    name: "ビルドカード生成器",
-    description: "UIDからキャラクターのビルドカードを作成します。",
-    category: "ビルド",
-    href: "/",
-    status: "available",
+    name: 'ビルドカード生成器',
+    description: 'UIDからキャラクターのビルドカードを作成します。',
+    category: 'ビルド',
+    href: '/',
+    status: 'available',
   },
   {
-    name: "遺物スコア計算",
-    description: "遺物のメイン・サブステータスを入力して、キャラクター別のスコアを計算します。",
-    category: "スコア",
-    href: "/tools/score",
-    status: "available",
+    name: '遺物スコア計算',
+    description: '遺物のメイン・サブステータスを入力して、キャラクター別のスコアを計算します。',
+    category: 'スコア',
+    href: '/tools/score',
+    status: 'available',
   },
 ];
 
@@ -45,29 +45,26 @@ export default function Tools() {
                     <div className={styles.cardTop}>
                       <span className={styles.category}>{tool.category}</span>
                       <span className={styles.status} data-status={tool.status}>
-                        {tool.status === "available" ? "利用可能" : "準備中"}
+                        {tool.status === 'available' ? '利用可能' : '準備中'}
                       </span>
                     </div>
                     <h3 className={styles.cardTitle}>{tool.name}</h3>
                     <p className={styles.cardDescription}>{tool.description}</p>
                     <span className={styles.cardAction} aria-hidden="true">
-                      {tool.status === "available" ? "" : "公開予定"}
-                      {tool.status === "available" && <span>↗</span>}
+                      {tool.status === 'available' ? '' : '公開予定'}
+                      {tool.status === 'available' && <span>↗</span>}
                     </span>
                   </>
                 );
 
                 return (
                   <li className={styles.card} key={tool.name}>
-                    {tool.status === "available" && tool.href ? (
+                    {tool.status === 'available' && tool.href ? (
                       <Link className={styles.cardLink} href={tool.href}>
                         {content}
                       </Link>
                     ) : (
-                      <div
-                        className={styles.cardUnavailable}
-                        aria-disabled="true"
-                      >
+                      <div className={styles.cardUnavailable} aria-disabled="true">
                         {content}
                       </div>
                     )}

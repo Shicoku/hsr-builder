@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import styles from "../styles/markdown.module.css";
+import type { ReactNode } from 'react';
+import styles from '../styles/markdown.module.css';
 
 export default function MarkdownPage({ children }: { children: ReactNode }) {
   return (

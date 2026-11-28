@@ -131,12 +131,12 @@
   background: rgb(148 163 184 / 8%);
 }
 
-.status[data-status="available"] {
+.status[data-status='available'] {
   color: #a5f3fc;
   background: rgb(103 232 249 / 10%);
 }
 
-.status[data-status="planned"] {
+.status[data-status='planned'] {
   color: #cbd5e1;
   background: rgb(148 163 184 / 12%);
 }

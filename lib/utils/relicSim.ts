@@ -1,4 +1,4 @@
-import { calcSubScore, type Weight } from "./scorer";
+import { calcSubScore, type Weight } from './scorer';
 
 export type Quality = 0 | 1 | 2;
 
@@ -20,21 +20,21 @@ export const ROLL = {
 export type StatType = keyof typeof ROLL;
 
 export const STAT_LABEL: Record<StatType, string> = {
-  HPDelta: "HP",
-  AttackDelta: "攻撃力",
-  DefenceDelta: "防御力",
-  HPAddedRatio: "HP%",
-  AttackAddedRatio: "攻撃力%",
-  DefenceAddedRatio: "防御力%",
-  CriticalChanceBase: "会心率",
-  CriticalDamageBase: "会心ダメージ",
-  SpeedDelta: "速度",
-  BreakDamageAddedRatioBase: "撃破特効",
-  StatusProbabilityBase: "効果命中",
-  StatusResistanceBase: "効果抵抗",
+  HPDelta: 'HP',
+  AttackDelta: '攻撃力',
+  DefenceDelta: '防御力',
+  HPAddedRatio: 'HP%',
+  AttackAddedRatio: '攻撃力%',
+  DefenceAddedRatio: '防御力%',
+  CriticalChanceBase: '会心率',
+  CriticalDamageBase: '会心ダメージ',
+  SpeedDelta: '速度',
+  BreakDamageAddedRatioBase: '撃破特効',
+  StatusProbabilityBase: '効果命中',
+  StatusResistanceBase: '効果抵抗',
 };
 
-const FIXED: StatType[] = ["HPDelta", "AttackDelta", "DefenceDelta", "SpeedDelta"];
+const FIXED: StatType[] = ['HPDelta', 'AttackDelta', 'DefenceDelta', 'SpeedDelta'];
 
 export const isPercent = (type: string) => !FIXED.includes(type as StatType);
 
@@ -51,7 +51,7 @@ function rollValue(type: string, q: Quality): number {
 
 // 表示用の値(%系は 3.2 のようにパーセント単位)
 export function displayValue(value: number, type: string): number {
-  if (type === "SpeedDelta") return Math.floor(value * 10) / 10;
+  if (type === 'SpeedDelta') return Math.floor(value * 10) / 10;
   if (!isPercent(type)) return Math.floor(value);
   return Math.floor(value * 1000) / 10;
 }
@@ -83,7 +83,11 @@ export function rerollOnce(subs: SubAffix[]): RolledSub[] {
 }
 
 // 遺物スコア(Score関数と同じ式: メイン×0.5 + サブ×0.5)
-export function relicScore(subs: { type: string; value: number }[], weight: Weight, mainScore: number) {
+export function relicScore(
+  subs: { type: string; value: number }[],
+  weight: Weight,
+  mainScore: number,
+) {
   return mainScore * 0.5 + calcSubScore(subs, weight) * 0.5;
 }
 
@@ -98,7 +102,12 @@ export type SimResult = {
   bins: number[]; // 1点幅の度数
 };
 
-export function runSimulation(subs: SubAffix[], weight: Weight, mainScore: number, n = 100_000): SimResult {
+export function runSimulation(
+  subs: SubAffix[],
+  weight: Weight,
+  mainScore: number,
+  n = 100_000,
+): SimResult {
   const base = relicScore(subs, weight, mainScore);
   const scores = new Float64Array(n);
 

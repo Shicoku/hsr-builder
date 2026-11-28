@@ -1,4 +1,6 @@
-const res = await fetch("https://raw.githubusercontent.com/Mar-7th/StarRailScore/refs/heads/master/score.json");
+const res = await fetch(
+  'https://raw.githubusercontent.com/Mar-7th/StarRailScore/refs/heads/master/score.json',
+);
 export const weightData = await res.json();
 
 // const maxVal = JSON.parse(fs.readFileSync("assets/max_value.json", "utf-8"));
@@ -34,7 +36,8 @@ export function calcMainScore(relic: any, weight: Weight, slot: number) {
 export function calcSubScore(subs: { type: string; value: number }[], weight: Weight) {
   let s = 0;
   for (const sub of subs) {
-    s += (sub.value / maxVal[sub.type as keyof typeof maxVal]) * (weight.weight[sub.type] ?? 0) * 100;
+    s +=
+      (sub.value / maxVal[sub.type as keyof typeof maxVal]) * (weight.weight[sub.type] ?? 0) * 100;
   }
   return s;
 }

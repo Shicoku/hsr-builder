@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import styles from "../styles/build.module.css";
-import spinner from "../styles/spinner.module.css";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+import styles from '../styles/build.module.css';
+import spinner from '../styles/spinner.module.css';
 
-import { Score, weightData, type Weight } from "../../lib/utils/scorer";
-import { RenderRelic } from "../../lib/utils/renderRelic";
-import { parserChar } from "../../lib/utils/renderBuild";
+import { Score, weightData, type Weight } from '../../lib/utils/scorer';
+import { RenderRelic } from '../../lib/utils/renderRelic';
+import { parserChar } from '../../lib/utils/renderBuild';
 
-import RelicCanvasItem from "./relicCanvasItem";
-import BuildCanvasItem from "./buildCanvasItem";
-import CharacterWeightDialog from "./characterWeightDialog";
-import { useBuildStore, type Character, type Player } from "./buildContext";
+import RelicCanvasItem from './relicCanvasItem';
+import BuildCanvasItem from './buildCanvasItem';
+import CharacterWeightDialog from './characterWeightDialog';
+import { useBuildStore, type Character, type Player } from './buildContext';
 
 type ApiResponse = {
   data?: { player?: Player; characters?: Character[] };
@@ -26,7 +26,7 @@ const EMPTY: Character[] = [];
 
 function assetUrl(icon: string | undefined) {
   if (!icon) return undefined;
-  if (icon.startsWith("http://") || icon.startsWith("https://")) return icon;
+  if (icon.startsWith('http://') || icon.startsWith('https://')) return icon;
   return `https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/${icon}`;
 }
 
@@ -34,11 +34,11 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const store = useBuildStore();
   const { setLoaded } = store;
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [requestVersion, setRequestVersion] = useState(0);
   const [remaining, setRemaining] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [mobileView, setMobileView] = useState<"relic" | "build">("relic");
+  const [mobileView, setMobileView] = useState<'relic' | 'build'>('relic');
   const [isWeightOpen, setIsWeightOpen] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
 
@@ -48,11 +48,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
   const selectedCharacterIndex = isCached ? store.selectedCharacterIndex : null;
   const selectedWeight = useMemo<Weight | null>(() => {
     if (selectedCharacterIndex === null) return null;
-    return (
-      (weightData as Record<string, Weight>)[
-        characters[selectedCharacterIndex]?.id
-      ] ?? null
-    );
+    return (weightData as Record<string, Weight>)[characters[selectedCharacterIndex]?.id] ?? null;
   }, [characters, selectedCharacterIndex]);
 
   const isValidUid = /^\d{9}$/.test(uid);
@@ -72,7 +68,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
   const handleTimerClick = () => {
     setRemaining(COOLDOWN_SEC);
-    setError("");
+    setError('');
     setRequestVersion((version) => version + 1);
   };
 
@@ -81,10 +77,10 @@ export default function BuildLoader({ uid }: { uid: string }) {
   useEffect(() => {
     if (!isWeightOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsWeightOpen(false);
+      if (event.key === 'Escape') setIsWeightOpen(false);
     };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
   }, [isWeightOpen]);
 
   useEffect(() => {
@@ -105,7 +101,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
       setIsLoading(true);
       try {
         const response = await fetch(`/api/profile/${uid}`, {
-          cache: "no-store",
+          cache: 'no-store',
           signal: controller.signal,
         });
         const result = (await response.json()) as ApiResponse;
@@ -117,26 +113,16 @@ export default function BuildLoader({ uid }: { uid: string }) {
           }, retryAfterSeconds * 1_000);
           return;
         }
-        if (!response.ok)
-          throw new Error(result.error ?? "情報を取得できませんでした。");
-        if (!result.data?.player)
-          throw new Error("プレイヤー情報を取得できませんでした。");
+        if (!response.ok) throw new Error(result.error ?? '情報を取得できませんでした。');
+        if (!result.data?.player) throw new Error('プレイヤー情報を取得できませんでした。');
 
-        setLoaded(
-          uid,
-          result.data.player,
-          result.data.characters?.slice(0, 8) ?? [],
-        );
+        setLoaded(uid, result.data.player, result.data.characters?.slice(0, 8) ?? []);
         if (requestVersion > 0) {
           setIsUpdated(true);
         }
       } catch (fetchError) {
         if (controller.signal.aborted) return;
-        setError(
-          fetchError instanceof Error
-            ? fetchError.message
-            : "情報を取得できませんでした。",
-        );
+        setError(fetchError instanceof Error ? fetchError.message : '情報を取得できませんでした。');
       } finally {
         if (!controller.signal.aborted) setIsLoading(false);
       }
@@ -155,17 +141,14 @@ export default function BuildLoader({ uid }: { uid: string }) {
     return () => window.clearTimeout(timer);
   }, [isUpdated]);
 
-  if (!isValidUid)
-    return (
-      <main className={styles.main}>URLに有効なUIDが指定されていません。</main>
-    );
+  if (!isValidUid) return <main className={styles.main}>URLに有効なUIDが指定されていません。</main>;
   if (error && !player) return <main className={styles.main}>{error}</main>;
 
   if (!player) {
     return (
       <main className={styles.main}>
         <Image
-          src={"/icons/spinner.svg"}
+          src={'/icons/spinner.svg'}
           width={100}
           height={100}
           alt="icon"
@@ -184,9 +167,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
         <section className={styles.profileSection}>
           <button
             type="button"
-            aria-label={
-              isLoading ? "プロフィールを更新中" : "プロフィールを再読み込み"
-            }
+            aria-label={isLoading ? 'プロフィールを更新中' : 'プロフィールを再読み込み'}
             onClick={handleTimerClick}
             disabled={disabled}
             className={`${styles.reloadWrap} ${remaining > 0 ? styles.count : styles.reload}`}
@@ -237,9 +218,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
         )}
       </div>
 
-      <section
-        className={`${styles.characterSection} ${isUpdated ? styles.updated : ""}`}
-      >
+      <section className={`${styles.characterSection} ${isUpdated ? styles.updated : ''}`}>
         {characters.map((character, index) => {
           const characterIcon = assetUrl(character.icon);
           return (
@@ -247,7 +226,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
               type="button"
               key={character.id}
               aria-label={character.name ?? character.id}
-              className={`${styles.characterButton} ${selectedCharacterIndex === index ? styles.selected : ""}`}
+              className={`${styles.characterButton} ${selectedCharacterIndex === index ? styles.selected : ''}`}
               onClick={() => handleCharacterClick(index)}
             >
               {characterIcon && (
@@ -267,9 +246,7 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
       {isWeightOpen && selectedWeight && selectedCharacterIndex !== null && (
         <CharacterWeightDialog
-          characterName={
-            characters[selectedCharacterIndex].name ?? "選択キャラ"
-          }
+          characterName={characters[selectedCharacterIndex].name ?? '選択キャラ'}
           weight={selectedWeight}
           onClose={() => setIsWeightOpen(false)}
         />
@@ -277,34 +254,26 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
       {selected && selectedCharacterIndex !== null && (
         <>
-          <div
-            className={styles.mobileViewSwitcher}
-            role="group"
-            aria-label="表示内容"
-          >
+          <div className={styles.mobileViewSwitcher} role="group" aria-label="表示内容">
             <button
               type="button"
-              aria-pressed={mobileView === "relic"}
-              className={
-                mobileView === "relic" ? styles.mobileViewSelected : ""
-              }
-              onClick={() => setMobileView("relic")}
+              aria-pressed={mobileView === 'relic'}
+              className={mobileView === 'relic' ? styles.mobileViewSelected : ''}
+              onClick={() => setMobileView('relic')}
             >
               遺物一覧
             </button>
             <button
               type="button"
-              aria-pressed={mobileView === "build"}
-              className={
-                mobileView === "build" ? styles.mobileViewSelected : ""
-              }
-              onClick={() => setMobileView("build")}
+              aria-pressed={mobileView === 'build'}
+              className={mobileView === 'build' ? styles.mobileViewSelected : ''}
+              onClick={() => setMobileView('build')}
             >
               ビルドカード
             </button>
           </div>
           <section
-            className={`${styles.relicSection} ${isUpdated ? styles.updated : ""} ${mobileView === "build" ? styles.mobileSectionHidden : ""}`}
+            className={`${styles.relicSection} ${isUpdated ? styles.updated : ''} ${mobileView === 'build' ? styles.mobileSectionHidden : ''}`}
           >
             <div className={styles.canvasWrap}>
               {selected.relics.map((relic, index) => (
@@ -323,12 +292,9 @@ export default function BuildLoader({ uid }: { uid: string }) {
 
       {selected && (
         <section
-          className={`${styles.buildSection} ${isUpdated ? styles.updated : ""} ${mobileView === "relic" ? styles.mobileSectionHidden : ""}`}
+          className={`${styles.buildSection} ${isUpdated ? styles.updated : ''} ${mobileView === 'relic' ? styles.mobileSectionHidden : ''}`}
         >
-          <BuildCanvasItem
-            key={selectedCharacterIndex}
-            build={selected.build}
-          />
+          <BuildCanvasItem key={selectedCharacterIndex} build={selected.build} />
         </section>
       )}
     </main>

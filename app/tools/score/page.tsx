@@ -1,98 +1,87 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import { maxVal, type Weight, weightData } from "../../../lib/utils/scorer";
-import styles from "../../styles/score.module.css";
+import { useEffect, useMemo, useState } from 'react';
+import { maxVal, type Weight, weightData } from '../../../lib/utils/scorer';
+import styles from '../../styles/score.module.css';
 
 const STAT_LABELS: Record<string, string> = {
-  HPDelta: "HP(実数)",
-  AttackDelta: "攻撃力(実数)",
-  DefenceDelta: "防御力(実数)",
-  HPAddedRatio: "HP(%)",
-  AttackAddedRatio: "攻撃力(%)",
-  DefenceAddedRatio: "防御力(%)",
-  SpeedDelta: "速度",
-  CriticalChanceBase: "会心率(%)",
-  CriticalDamageBase: "会心ダメージ(%)",
-  StatusProbabilityBase: "効果命中",
-  StatusResistanceBase: "効果抵抗",
-  BreakDamageAddedRatioBase: "撃破特攻",
-  HealRatioBase: "治癒量",
-  PhysicalAddedRatio: "物理属性ダメージ",
-  FireAddedRatio: "火属性ダメージ",
-  IceAddedRatio: "氷属性ダメージ",
-  ThunderAddedRatio: "雷属性ダメージ",
-  WindAddedRatio: "風属性ダメージ",
-  QuantumAddedRatio: "量子属性ダメージ",
-  ImaginaryAddedRatio: "虚数属性ダメージ",
-  SPRatioBase: "EP回復効率",
+  HPDelta: 'HP(実数)',
+  AttackDelta: '攻撃力(実数)',
+  DefenceDelta: '防御力(実数)',
+  HPAddedRatio: 'HP(%)',
+  AttackAddedRatio: '攻撃力(%)',
+  DefenceAddedRatio: '防御力(%)',
+  SpeedDelta: '速度',
+  CriticalChanceBase: '会心率(%)',
+  CriticalDamageBase: '会心ダメージ(%)',
+  StatusProbabilityBase: '効果命中',
+  StatusResistanceBase: '効果抵抗',
+  BreakDamageAddedRatioBase: '撃破特攻',
+  HealRatioBase: '治癒量',
+  PhysicalAddedRatio: '物理属性ダメージ',
+  FireAddedRatio: '火属性ダメージ',
+  IceAddedRatio: '氷属性ダメージ',
+  ThunderAddedRatio: '雷属性ダメージ',
+  WindAddedRatio: '風属性ダメージ',
+  QuantumAddedRatio: '量子属性ダメージ',
+  ImaginaryAddedRatio: '虚数属性ダメージ',
+  SPRatioBase: 'EP回復効率',
 };
 
 const PARTS: Record<number, string> = {
-  1: "頭",
-  2: "手",
-  3: "胴体",
-  4: "足",
-  5: "オーブ",
-  6: "縄",
+  1: '頭',
+  2: '手',
+  3: '胴体',
+  4: '足',
+  5: 'オーブ',
+  6: '縄',
 };
 
 type SubInput = { type: string; value: string };
 type CharacterWeight = Weight & { name?: string; path?: string };
-const characters = Object.entries(
-  weightData as Record<string, CharacterWeight>,
-).filter(([, item]) => item?.main && item?.weight);
+const characters = Object.entries(weightData as Record<string, CharacterWeight>).filter(
+  ([, item]) => item?.main && item?.weight,
+);
 
 function rankFor(score: number) {
-  if (score >= 100) return "SS";
-  if (score >= 90) return "S";
-  if (score >= 60) return "A";
-  if (score >= 40) return "B";
-  if (score >= 10) return "C";
-  return "D";
+  if (score >= 100) return 'SS';
+  if (score >= 90) return 'S';
+  if (score >= 60) return 'A';
+  if (score >= 40) return 'B';
+  if (score >= 10) return 'C';
+  return 'D';
 }
 
 export default function ScoreToolPage() {
-  const [localizedNames, setLocalizedNames] = useState<Record<string, string>>(
-    {},
-  );
-  const [localizedPaths, setLocalizedPaths] = useState<Record<string, string>>(
-    {},
-  );
-  const [characterId, setCharacterId] = useState("");
+  const [localizedNames, setLocalizedNames] = useState<Record<string, string>>({});
+  const [localizedPaths, setLocalizedPaths] = useState<Record<string, string>>({});
+  const [characterId, setCharacterId] = useState('');
   const [slot, setSlot] = useState(1);
   const [level, setLevel] = useState(15);
-  const [mainType, setMainType] = useState("");
+  const [mainType, setMainType] = useState('');
   const [subs, setSubs] = useState<SubInput[]>([
-    { type: "", value: "" },
-    { type: "", value: "" },
-    { type: "", value: "" },
-    { type: "", value: "" },
+    { type: '', value: '' },
+    { type: '', value: '' },
+    { type: '', value: '' },
+    { type: '', value: '' },
   ]);
 
   useEffect(() => {
     let cancelled = false;
     fetch(
-      "https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/index_min/jp/characters.json",
+      'https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/index_min/jp/characters.json',
     )
       .then((response) => {
-        if (!response.ok)
-          throw new Error("キャラクター名を取得できませんでした");
-        return response.json() as Promise<
-          Record<string, { name?: string; path?: string }>
-        >;
+        if (!response.ok) throw new Error('キャラクター名を取得できませんでした');
+        return response.json() as Promise<Record<string, { name?: string; path?: string }>>;
       })
       .then((data) => {
         if (!cancelled) {
           setLocalizedNames(
-            Object.fromEntries(
-              Object.entries(data).map(([id, item]) => [id, item.name ?? ""]),
-            ),
+            Object.fromEntries(Object.entries(data).map(([id, item]) => [id, item.name ?? ''])),
           );
           setLocalizedPaths(
-            Object.fromEntries(
-              Object.entries(data).map(([id, item]) => [id, item.path ?? ""]),
-            ),
+            Object.fromEntries(Object.entries(data).map(([id, item]) => [id, item.path ?? ''])),
           );
         }
       })
@@ -104,47 +93,46 @@ export default function ScoreToolPage() {
 
   const sortedCharacters = useMemo(() => {
     const pathLabels: Record<string, string> = {
-      destruction: "壊滅",
-      warrior: "壊滅",
-      preservation: "存護",
-      knight: "存護",
-      hunt: "巡狩",
-      rogue: "巡狩",
-      erudition: "知恵",
-      mage: "知恵",
-      nihility: "虚無",
-      warlock: "虚無",
-      abundance: "豊穣",
-      priest: "豊穣",
-      harmony: "調和",
-      shaman: "調和",
-      remembrance: "記憶",
-      memory: "記憶",
-      elation: "愉悦",
+      destruction: '壊滅',
+      warrior: '壊滅',
+      preservation: '存護',
+      knight: '存護',
+      hunt: '巡狩',
+      rogue: '巡狩',
+      erudition: '知恵',
+      mage: '知恵',
+      nihility: '虚無',
+      warlock: '虚無',
+      abundance: '豊穣',
+      priest: '豊穣',
+      harmony: '調和',
+      shaman: '調和',
+      remembrance: '記憶',
+      memory: '記憶',
+      elation: '愉悦',
     };
     const fallbackPaths: Record<string, string> = {
-      "8001": "Destruction",
-      "8003": "Preservation",
-      "8005": "Harmony",
-      "8007": "Remembrance",
+      '8001': 'Destruction',
+      '8003': 'Preservation',
+      '8005': 'Harmony',
+      '8007': 'Remembrance',
     };
     const seenTrailblazerPaths = new Set<string>();
 
     return characters
       .filter(([id]) => !/^800\d+$/.test(id) || Number(id) % 2 === 1)
       .map(([id, item]) => {
-        const rawName = localizedNames[id] || item.name || "";
-        const isTrailblazer = /^800\d+$/.test(id) || rawName.includes("{NICKNAME}");
-        const name = rawName.replaceAll("{NICKNAME}", "開拓者");
-        const rawPath = localizedPaths[id] || item.path || fallbackPaths[id] || "";
+        const rawName = localizedNames[id] || item.name || '';
+        const isTrailblazer = /^800\d+$/.test(id) || rawName.includes('{NICKNAME}');
+        const name = rawName.replaceAll('{NICKNAME}', '開拓者');
+        const rawPath = localizedPaths[id] || item.path || fallbackPaths[id] || '';
         const normalizedPath = rawPath
-          .replace(/^Path\s*of\s*/i, "")
-          .replace(/[^a-z]/gi, "")
+          .replace(/^Path\s*of\s*/i, '')
+          .replace(/[^a-z]/gi, '')
           .toLowerCase();
         const path =
-          pathLabels[normalizedPath] ||
-          (/[^\u0000-\u007f]/.test(rawPath) ? rawPath : "");
-        const displayName = isTrailblazer ? "開拓者" : name;
+          pathLabels[normalizedPath] || (/[^\u0000-\u007f]/.test(rawPath) ? rawPath : '');
+        const displayName = isTrailblazer ? '開拓者' : name;
         return [
           id,
           item,
@@ -160,7 +148,7 @@ export default function ScoreToolPage() {
         seenTrailblazerPaths.add(path);
         return true;
       })
-      .sort((a, b) => a[2].localeCompare(b[2], "ja"));
+      .sort((a, b) => a[2].localeCompare(b[2], 'ja'));
   }, [localizedNames, localizedPaths]);
 
   const character = characterId
@@ -169,12 +157,10 @@ export default function ScoreToolPage() {
   const mainOptions = Object.keys(character?.main?.[slot] ?? {}).filter(
     (type) => (character?.main?.[slot]?.[type] ?? 0) > 0,
   );
-  const subOptions = [
-    ...new Set([...Object.keys(character?.weight ?? {}), "DefenceDelta"]),
-  ].filter(
+  const subOptions = [...new Set([...Object.keys(character?.weight ?? {}), 'DefenceDelta'])].filter(
     (type) =>
       type !== mainType &&
-      ((character?.weight?.[type] ?? 0) > 0 || type === "DefenceDelta") &&
+      ((character?.weight?.[type] ?? 0) > 0 || type === 'DefenceDelta') &&
       type in maxVal,
   );
 
@@ -183,11 +169,10 @@ export default function ScoreToolPage() {
     const mainWeight = character.main[slot]?.[mainType] ?? 0;
     const mainScore = ((level + 1) / 16) * mainWeight * 100;
     const subScore = subs.reduce((sum, sub) => {
-      if (!sub.type || sub.value === "") return sum;
+      if (!sub.type || sub.value === '') return sum;
       const value = Number(sub.value);
       if (!Number.isFinite(value) || value < 0) return sum;
-      const normalizedValue =
-        maxVal[sub.type as keyof typeof maxVal] < 1 ? value / 100 : value;
+      const normalizedValue = maxVal[sub.type as keyof typeof maxVal] < 1 ? value / 100 : value;
       return (
         sum +
         (normalizedValue / maxVal[sub.type as keyof typeof maxVal]) *
@@ -200,9 +185,7 @@ export default function ScoreToolPage() {
   }, [character, level, mainType, slot, subs]);
 
   function updateSub(index: number, field: keyof SubInput, value: string) {
-    setSubs((current) =>
-      current.map((sub, i) => (i === index ? { ...sub, [field]: value } : sub)),
-    );
+    setSubs((current) => current.map((sub, i) => (i === index ? { ...sub, [field]: value } : sub)));
   }
 
   return (
@@ -227,7 +210,7 @@ export default function ScoreToolPage() {
                   value={characterId}
                   onChange={(event) => {
                     setCharacterId(event.target.value);
-                    setMainType("");
+                    setMainType('');
                   }}
                 >
                   <option value="">選択してください</option>
@@ -245,7 +228,7 @@ export default function ScoreToolPage() {
                     value={slot}
                     onChange={(event) => {
                       setSlot(Number(event.target.value));
-                      setMainType("");
+                      setMainType('');
                     }}
                   >
                     {Object.entries(PARTS).map(([id, name]) => (
@@ -257,10 +240,7 @@ export default function ScoreToolPage() {
                 </label>
                 <label className={styles.field}>
                   <span>遺物レベル</span>
-                  <select
-                    value={level}
-                    onChange={(event) => setLevel(Number(event.target.value))}
-                  >
+                  <select value={level} onChange={(event) => setLevel(Number(event.target.value))}>
                     {Array.from({ length: 16 }, (_, i) => (
                       <option key={i} value={i}>
                         +{i}
@@ -278,9 +258,7 @@ export default function ScoreToolPage() {
                     setMainType(nextMainType);
                     setSubs((current) =>
                       current.map((sub) =>
-                        sub.type === nextMainType
-                          ? { type: "", value: "" }
-                          : sub,
+                        sub.type === nextMainType ? { type: '', value: '' } : sub,
                       ),
                     );
                   }}
@@ -303,19 +281,14 @@ export default function ScoreToolPage() {
               <div className={styles.subList}>
                 {subs.map((sub, index) => (
                   <div className={styles.subRow} key={index}>
-                    <label
-                      className={styles.srOnly}
-                      htmlFor={`sub-stat-${index}`}
-                    >
+                    <label className={styles.srOnly} htmlFor={`sub-stat-${index}`}>
                       サブステータス {index + 1}
                     </label>
                     <select
                       id={`sub-stat-${index}`}
                       value={sub.type}
                       disabled={!character}
-                      onChange={(event) =>
-                        updateSub(index, "type", event.target.value)
-                      }
+                      onChange={(event) => updateSub(index, 'type', event.target.value)}
                     >
                       <option value="">未選択</option>
                       {subOptions.map((type) => (
@@ -324,10 +297,7 @@ export default function ScoreToolPage() {
                         </option>
                       ))}
                     </select>
-                    <label
-                      className={styles.srOnly}
-                      htmlFor={`sub-value-${index}`}
-                    >
+                    <label className={styles.srOnly} htmlFor={`sub-value-${index}`}>
                       サブステータス {index + 1} の値
                     </label>
                     <input
@@ -338,9 +308,7 @@ export default function ScoreToolPage() {
                       inputMode="decimal"
                       placeholder="値"
                       value={sub.value}
-                      onChange={(event) =>
-                        updateSub(index, "value", event.target.value)
-                      }
+                      onChange={(event) => updateSub(index, 'value', event.target.value)}
                       disabled={!sub.type}
                     />
                   </div>
@@ -352,11 +320,7 @@ export default function ScoreToolPage() {
             </fieldset>
           </section>
 
-          <aside
-            className={styles.resultPanel}
-            aria-live="polite"
-            aria-label="計算結果"
-          >
+          <aside className={styles.resultPanel} aria-live="polite" aria-label="計算結果">
             <p className={styles.resultLabel}>遺物スコア</p>
             {result ? (
               <>
@@ -380,9 +344,7 @@ export default function ScoreToolPage() {
                 キャラクターとメインステータスを選ぶと、スコアが表示されます。
               </p>
             )}
-            <p className={styles.formula}>
-              遺物スコア = メインスコア × 0.5 + サブスコア × 0.5
-            </p>
+            <p className={styles.formula}>遺物スコア = メインスコア × 0.5 + サブスコア × 0.5</p>
             <p className={styles.estimateNote}>
               スコアはキャラクター別の重みと入力値から算出した推定値です。目安としてご利用ください。
             </p>
